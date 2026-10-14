@@ -1,0 +1,38 @@
+---
+layout: ../layouts/Doc.astro
+title: Community of practice
+eyebrow: Community
+description: Champion directory, office hours and a feedback loop that keeps the program improving.
+---
+
+## Champion directory
+
+Keep a list of champions so people know who to ask. Start from the [directory template](/resources/files/champion-directory.csv) and publish it somewhere everyone can read, such as your intranet or a pinned post in the feedback channel.
+
+Each row lists the team, the champion, a backup, their time zone, the main repositories and an office hours slot.
+
+## Office hours
+
+Hold 30 minutes every week, at a time that rotates across time zones if you need it.
+
+| Time | Segment |
+| --- | --- |
+| 0:00 | One new tip or workflow, shown live |
+| 0:05 | Bring your problem: attendees share their screen and work through it with a champion |
+| 0:20 | Reliability round: crashes, hangs or lost work from the past week, with the time and what the person was doing |
+| 0:25 | Wrap up: log open issues and owners |
+
+The champion who runs the session writes up the notes and files reliability reports. Use **Share feedback** in the app, or open an issue in the public [github/app repository](https://github.com/github/app/issues) with the app version, operating system and steps to reproduce. Attach the report from the app's **Health check** when sign-in or startup fails. Issues in that repository are public, so leave out internal code, data and names.
+
+## Feedback loop
+
+1. **Collect.** One feedback channel in Teams or Slack, plus the monthly [pulse survey](/resources/files/pulse-survey.md).
+2. **Triage.** The CoE lead tags each item: how-to question, policy blocker, product bug or idea.
+3. **Act.** How-to questions go into the FAQ. Policy blockers go to the admin partner. Product bugs and ideas go to GitHub through your account team or the in-app feedback.
+4. **Close the loop.** Post a short "you asked, we did" note every month.
+
+An automation can do the first pass. Point a weekly automation at the feedback channel through an approved connector and have it draft the triage table for the CoE lead to review.
+
+## Share wins
+
+Ask each champion for one story a month: the task, the prompt, the time it saved. Collect them in a shared document and use the best ones in launch comms and demo day.

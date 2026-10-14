@@ -1,0 +1,65 @@
+---
+layout: ../layouts/Doc.astro
+title: Rollout playbooks
+eyebrow: Playbooks
+description: A fast default-on launch plan, plus week-by-week versions for a team of 10 and an organization of 1,000.
+---
+
+These playbooks favor a broad launch. Spend two weeks validating, then turn the app on for everyone with a Copilot seat. Use managed settings to hold back anything that isn't ready, so a single feature never delays the whole launch. Track each step in the [CoE checklist](/coe/checklist/).
+
+## 30/60/90-day rollout
+
+### Days 1 to 14: Validation sprint
+
+- Name a sponsor, a CoE lead and a security partner on day 1.
+- Brief admins with the [admin readiness package](/resources/#admin-readiness) and record policy decisions in the first week.
+- Ship custom instructions and two or three skills in your top repositories. Stand up a private plugin marketplace with a starter kit. See [customizations](/coe/customizations/).
+- Pick 20 to 50 validation users across roles, including a business team.
+- Capture baseline metrics on day 1: PR cycle time, review turnaround and a pulse survey.
+- Run the kickoff and get every validation user through a first session in the meeting.
+- **Exit criteria:** no open blocker in admin, security or support, and a launch date set.
+
+### Days 15 to 30: Org-wide launch
+
+- Set managed settings for your marketplace, required plugins and MCP servers before launch day.
+- Enable the app for everyone with a seat in one step.
+- Send the [launch comms](/resources/#launch-comms) from the sponsor on launch day.
+- Champions run a 30-minute demo in each team during launch week.
+- Start daily office hours for launch week, then go to weekly. Collect crash and reliability reports there.
+- **Exit criteria:** most of the org has opened the app once, and support load is steady.
+
+### Days 31 to 90: Weekly habit
+
+- Each team adds one automation it reads every week.
+- Run a [demo day](/resources/#demo-day) for admins and decision makers in month 2.
+- Publish the [which tool when](/which-tool/) guide and the starter prompt library.
+- Fix the biggest drop in the activation funnel every two weeks.
+- Report outcomes against the baseline with an ROI range at day 90.
+- **Exit criteria:** weekly active use is climbing, and next quarter's plan is signed off.
+
+## Team of 10
+
+One person can run this in a few hours a week.
+
+| Week | Do this |
+| --- | --- |
+| 1 | Confirm seats and policies with your admin. Add a reviewed config file and `copilot-instructions.md` to the team's main repository. |
+| 1 | Hold a 30-minute kickoff where everyone runs a first session on a real issue. |
+| 2 | Each person picks two workflows from their [role page](/roles/), including one that isn't code, and uses them three times. |
+| 2 | Set up one shared automation, such as a daily issue triage or weekly status draft. |
+| 3 | Retro: keep what saved time, drop what didn't. Turn the keepers into skills. |
+
+## Organization of 1,000
+
+Run this as a program with a small CoE team.
+
+| Phase | Weeks | Scope | Key activities |
+| --- | --- | --- | --- |
+| Validation | 1 to 2 | 20 to 50 users across roles | Admin readiness, managed settings, marketplace, baseline, kickoff |
+| Org-wide launch | 3 to 4 | Everyone with a seat, default on | Sponsor email, team demos, daily office hours, starter prompts |
+| Weekly habit | 5 to 12 | Everyone | Team automations, role workshops, demo day, funnel fixes every two weeks |
+| Optimize | 13 onward | Everyone | Quarterly outcome reviews, plugin catalog growth, community of practice |
+
+Staffing guide: one CoE lead, one admin partner, one security partner and a champion for every 30 to 50 users. Line up the champions before launch day, since launch week is when they matter most.
+
+A fast launch moves the risk from access to activation. Expect a big group who install and never start a session. Plan for it with starter prompts, team demos and the two-week reminder email, and watch the [activation funnel](/coe/measurement/#activation-funnel) daily during launch week.

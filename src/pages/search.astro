@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/paths';
+---
+<Base title="Search" description="Search the Copilot app Enablement Center.">
+  <section class="coe-page-hero" data-pagefind-ignore="all">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2" style="color:#7ee787">Search</p>
+      <h1 class="coe-h1 mb-3">Search the Enablement Center</h1>
+      <p class="coe-lede">Find use cases, checklist steps, governance guidance and resources.</p>
+    </div>
+  </section>
+  <div class="coe-container py-6" style="max-width: 820px" data-pagefind-ignore="all">
+    <div id="coe-search" data-bundle={href('/pagefind/')} data-base={href('/')}></div>
+    <noscript><p>Search needs JavaScript. Browse the <a href={href('/roles/')}>use cases</a> or <a href={href('/resources/')}>resources</a> instead.</p></noscript>
+    <p class="f6 color-fg-muted mt-3" data-coe-search-missing hidden>
+      The search index is built with <code>npm run build</code>. Run <code>npm run preview</code> to try search locally.
+    </p>
+  </div>
+</Base>
+
+<script>
+  const el = document.getElementById('coe-search');
+  const bundle = el?.dataset.bundle ?? '/pagefind/';
+  const css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = `${bundle}pagefind-ui.css`;
+  document.head.append(css);
+  const script = document.createElement('script');
+  script.src = `${bundle}pagefind-ui.js`;
+  script.onload = () => {
+    // @ts-expect-error PagefindUI is a global from the generated bundle.
+    const ui = new PagefindUI({ element: '#coe-search', bundlePath: bundle, baseUrl: el?.dataset.base ?? '/', showSubResults: true, resetStyles: false });
+    const q = new URLSearchParams(location.search).get('q');
+    if (q) ui.triggerSearch(q);
+    document.querySelector<HTMLInputElement>('#coe-search input')?.focus();
+  };
+  script.onerror = () => {
+    document.querySelector<HTMLElement>('[data-coe-search-missing]')!.hidden = false;
+  };
+  document.head.append(script);
+</script>
+
+<style is:global>
+  #coe-search {
+    --pagefind-ui-primary: var(--fgColor-accent, #0969da);
+    --pagefind-ui-text: var(--fgColor-default, #1f2328);
+    --pagefind-ui-background: var(--bgColor-default, #ffffff);
+    --pagefind-ui-border: var(--borderColor-default, #d0d7de);
+    --pagefind-ui-tag: var(--bgColor-muted, #f6f8fa);
+    --pagefind-ui-font: inherit;
+    --pagefind-ui-border-radius: 6px;
+  }
+</style>

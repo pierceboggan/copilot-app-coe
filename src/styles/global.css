@@ -1,0 +1,463 @@
+@import '@primer/primitives/dist/css/primitives.css';
+@import '@primer/primitives/dist/css/functional/themes/light.css';
+@import '@primer/primitives/dist/css/functional/themes/dark.css';
+@import '@primer/css/dist/primer.css';
+@import '@fontsource-variable/mona-sans/index.css';
+
+/* Primer CSS ships no gap utilities; these follow its 4px spacing scale. */
+.gap-1 { gap: 4px; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 16px; }
+.gap-4 { gap: 24px; }
+.gap-5 { gap: 32px; }
+.gap-6 { gap: 40px; }
+
+:root {
+  --coe-max-width: 1280px;
+  --coe-font-display: 'Mona Sans Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+}
+
+body {
+  font-family: var(--coe-font-display);
+  background: var(--bgColor-default);
+  color: var(--fgColor-default);
+}
+
+.coe-container {
+  max-width: var(--coe-max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.coe-skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.coe-skip-link:focus {
+  left: 16px;
+  top: 16px;
+  z-index: 100;
+  padding: 8px 16px;
+  background: var(--bgColor-default);
+  border-radius: 6px;
+}
+
+/* Header and footer follow the dark GitHub.com marketing chrome in both modes. */
+.coe-header {
+  background: #0d1117;
+  color: #f0f6fc;
+  border-bottom: 1px solid #30363d;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.coe-header a {
+  color: #f0f6fc;
+}
+.coe-header .coe-nav a {
+  font-weight: 500;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.coe-header .coe-nav a:hover,
+.coe-header .coe-nav a[aria-current='page'] {
+  background: rgba(177, 186, 196, 0.12);
+  text-decoration: none;
+}
+.coe-header .btn-invisible {
+  color: #f0f6fc;
+}
+.coe-header .btn {
+  color: #f0f6fc;
+  background: transparent;
+  border-color: #3d444d;
+}
+.coe-header .btn:hover {
+  border-color: #9198a1;
+  text-decoration: none;
+}
+
+.coe-hero {
+  position: relative;
+  overflow: hidden;
+  background: #0d1117;
+  color: #f0f6fc;
+  padding: 96px 0 112px;
+}
+.coe-hero::before {
+  content: '';
+  position: absolute;
+  inset: -40% -10% auto;
+  height: 140%;
+  background:
+    radial-gradient(40% 50% at 20% 30%, rgba(131, 80, 255, 0.35), transparent 70%),
+    radial-gradient(35% 45% at 80% 20%, rgba(32, 160, 255, 0.28), transparent 70%),
+    radial-gradient(30% 40% at 60% 80%, rgba(46, 160, 67, 0.2), transparent 70%);
+  pointer-events: none;
+}
+.coe-hero > * {
+  position: relative;
+}
+.coe-hero .coe-eyebrow {
+  color: #d2a8ff;
+}
+.coe-hero p.coe-lede {
+  color: #9198a1;
+}
+
+.coe-page-hero {
+  background: #0d1117;
+  color: #f0f6fc;
+  padding: 64px 0 56px;
+  position: relative;
+  overflow: hidden;
+}
+.coe-page-hero::before {
+  content: '';
+  position: absolute;
+  inset: -60% 30% auto -10%;
+  height: 200%;
+  background: radial-gradient(40% 40% at 30% 40%, rgba(131, 80, 255, 0.3), transparent 70%);
+  pointer-events: none;
+}
+.coe-page-hero > * {
+  position: relative;
+}
+.coe-page-hero p.coe-lede {
+  color: #9198a1;
+}
+.coe-page-hero a {
+  color: #4493f8;
+}
+
+.coe-display {
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-stretch: 110%;
+}
+.coe-h1 {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.coe-h2 {
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+.coe-eyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fgColor-done);
+}
+.coe-lede {
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--fgColor-muted);
+  max-width: 720px;
+}
+
+.coe-section {
+  padding: 80px 0;
+}
+.coe-section-muted {
+  background: var(--bgColor-muted);
+  border-top: 1px solid var(--borderColor-muted);
+  border-bottom: 1px solid var(--borderColor-muted);
+}
+
+.coe-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.coe-grid-2 {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+.coe-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  background: var(--bgColor-default);
+  border: 1px solid var(--borderColor-default);
+  border-radius: 12px;
+  color: var(--fgColor-default);
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+a.coe-card:hover {
+  text-decoration: none;
+  border-color: var(--borderColor-accent-emphasis);
+  transform: translateY(-2px);
+}
+a.coe-card:focus-visible {
+  outline: 2px solid var(--focus-outlineColor);
+  outline-offset: 2px;
+}
+.coe-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+.coe-card p {
+  color: var(--fgColor-muted);
+  margin: 0;
+}
+.coe-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--bgColor-done-muted);
+  color: var(--fgColor-done);
+}
+.coe-card-disabled {
+  opacity: 0.6;
+}
+
+.coe-stat {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.coe-footer {
+  background: #0d1117;
+  color: #9198a1;
+  padding: 48px 0;
+  border-top: 1px solid #30363d;
+}
+.coe-footer a {
+  color: #9198a1;
+}
+
+/* Prompt block */
+.coe-prompt {
+  border: 1px solid var(--borderColor-default);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bgColor-default);
+}
+.coe-prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bgColor-muted);
+  border-bottom: 1px solid var(--borderColor-default);
+  font-size: 12px;
+  color: var(--fgColor-muted);
+}
+.coe-prompt pre {
+  margin: 0;
+  padding: 16px;
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.6;
+  background: transparent;
+}
+
+/* Checklist */
+.coe-check-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--borderColor-muted);
+}
+.coe-check-item:first-of-type {
+  border-top: 0;
+}
+.coe-check-item input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  accent-color: var(--bgColor-success-emphasis);
+}
+.coe-check-item.is-done .coe-check-title {
+  color: var(--fgColor-muted);
+  text-decoration: line-through;
+}
+
+.coe-toc a {
+  display: block;
+  padding: 4px 0;
+  color: var(--fgColor-muted);
+  font-size: 14px;
+}
+.coe-toc a:hover {
+  color: var(--fgColor-accent);
+}
+
+.markdown-body {
+  font-family: var(--coe-font-display);
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.coe-card {
+    transition: none;
+  }
+  a.coe-card:hover {
+    transform: none;
+  }
+}
+
+/* Primer CSS v22 no longer ships these components; rebuilt here with Primer tokens. */
+[id] {
+  scroll-margin-top: 88px;
+}
+
+.Box {
+  background: var(--bgColor-default);
+  border: 1px solid var(--borderColor-default);
+  border-radius: 12px;
+}
+.Box-header {
+  padding: 16px;
+  background: var(--bgColor-muted);
+  border-bottom: 1px solid var(--borderColor-default);
+  border-radius: 12px 12px 0 0;
+}
+.Box-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--borderColor-default);
+  border-radius: 0 0 12px 12px;
+}
+
+.Label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 22px;
+  white-space: nowrap;
+  border: 1px solid var(--borderColor-default);
+  border-radius: 999px;
+  color: var(--fgColor-muted);
+}
+.Label--accent {
+  color: var(--fgColor-accent);
+  border-color: var(--borderColor-accent-emphasis);
+}
+.Label--done {
+  color: var(--fgColor-done);
+  border-color: var(--borderColor-done-emphasis);
+}
+.Label--secondary {
+  color: var(--fgColor-muted);
+}
+.coe-hero .Label,
+.coe-page-hero .Label {
+  color: #d2a8ff;
+  border-color: #8957e5;
+}
+
+.Progress {
+  display: flex;
+  height: 8px;
+  overflow: hidden;
+  background: var(--bgColor-neutral-muted);
+  border-radius: 999px;
+}
+.Progress--large {
+  height: 10px;
+}
+.Progress-item {
+  transition: width 200ms ease;
+}
+
+.flash {
+  padding: 16px 20px;
+  border: 1px solid;
+  border-radius: 12px;
+}
+.flash-warn {
+  color: var(--fgColor-default);
+  background: var(--bgColor-attention-muted);
+  border-color: var(--borderColor-attention-muted);
+}
+
+.TimelineItem-group {
+  position: relative;
+}
+.TimelineItem {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+}
+.TimelineItem::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 15px;
+  width: 2px;
+  background: var(--borderColor-muted);
+}
+.TimelineItem:first-child::before {
+  top: 50%;
+}
+.TimelineItem:last-child::before {
+  bottom: 50%;
+}
+.TimelineItem-badge {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--fgColor-muted);
+  background: var(--bgColor-muted);
+  border: 2px solid var(--bgColor-default);
+  border-radius: 50%;
+}
+.TimelineItem-body {
+  align-self: center;
+  color: var(--fgColor-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Progress-item {
+    transition: none;
+  }
+}
+
+.markdown-body .coe-prompt,
+.markdown-body #repo-setting {
+  margin: 16px 0;
+}
+
+.coe-demo {
+  margin: 16px 0;
+}
+.coe-demo img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+}
+.coe-demo figcaption {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--fgColor-muted, #59636e);
+}

@@ -1,0 +1,23 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  frontmatter: { title: string; description?: string; eyebrow?: string };
+}
+
+const { frontmatter } = Astro.props;
+---
+<Base title={frontmatter.title} description={frontmatter.description}>
+  <section class="coe-page-hero">
+    <div class="coe-container">
+      {frontmatter.eyebrow && <p class="coe-eyebrow mb-2" style="color:#d2a8ff">{frontmatter.eyebrow}</p>}
+      <h1 class="coe-h1 mb-3">{frontmatter.title}</h1>
+      {frontmatter.description && <p class="coe-lede">{frontmatter.description}</p>}
+    </div>
+  </section>
+  <div class="coe-container py-6">
+    <article class="markdown-body" style="max-width: 880px">
+      <slot />
+    </article>
+  </div>
+</Base>

@@ -1,0 +1,121 @@
+---
+layout: ../../layouts/Doc.astro
+title: Customizations and plugin marketplaces
+eyebrow: Center of Excellence
+description: Instructions, custom agents, skills, MCP servers and plugins, plus how an enterprise curates a private plugin marketplace and controls it with managed settings.
+---
+
+Customizations turn the Copilot app from a general assistant into one that knows your organization. The CoE's job is to ship a good default set, publish it where everyone gets it, and use enterprise-managed settings to decide what else people can add.
+
+Skills and MCP servers configured for your repositories or Copilot CLI are available in the app automatically. Users find and manage MCP servers, plugins, skills and canvases in the app under **Customize** ([docs](https://docs.github.com/en/copilot/how-tos/github-copilot-app/customize-github-copilot-app)).
+
+## The building blocks
+
+| Customization | What it does | Where it lives |
+| --- | --- | --- |
+| Custom instructions | Standing guidance the agent reads in every session: conventions, test commands, things never to do | `.github/copilot-instructions.md`, path-scoped `.github/instructions/*.instructions.md`, and `AGENTS.md` |
+| Project instructions | App-specific instructions plus setup and run scripts for sessions | `.github/github-app.yml` ([repository configuration](https://docs.github.com/en/copilot/reference/github-copilot-app-reference/repository-configuration)) |
+| Custom agents | A named persona with its own prompt, tools and model choices, such as a "release manager" or "migration helper" | `.github/agents/` in a repository |
+| Skills | A folder with a `SKILL.md` and supporting files the agent loads when a task matches, such as "build our status deck" | `.github/skills/<name>/` in a repository, or `~/.copilot/skills/` for one person |
+| MCP servers | Tools and data from outside GitHub: Sentry, a database, an internal API | Repository or user MCP config, or bundled inside a plugin |
+| Plugins | A versioned bundle of agents, skills, MCP servers and hooks that installs in one step | A plugin marketplace |
+
+The app also has **App instructions** for every session (Settings → Sessions) and per-project **Instructions** (Settings → Projects).
+
+{/* TODO: docs.github.com does not say whether the app reads organization-level custom instructions set on GitHub.com. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+
+Start with instructions and skills. They are plain files that live in a repository, go through code review and need no admin setup. Reach for plugins when the same bundle should land on many repositories or many people at once.
+
+## Plugin marketplaces
+
+A marketplace is a catalog of plugins. It is a `marketplace.json` file whose entries point at plugin folders, hosted in a GitHub repository, a git URL or a local directory. Users browse it and install plugins from it.
+
+For an enterprise, the usual setup is one **private marketplace repository** owned by the CoE:
+
+1. Create a private repository, for example `your-org/copilot-plugins`, with a `marketplace.json` at the root and one folder per plugin.
+2. Put your org's starter kit in it: the review agent, the status-deck skill, the approved Sentry MCP server.
+3. Review plugin changes the way you review CI changes. Plugins can run MCP servers and hooks on users' machines.
+4. Register the marketplace for everyone through managed settings (below), or for one repository through `.github/copilot/settings.json`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "your-org": {
+      "source": { "source": "github", "repo": "your-org/copilot-plugins" }
+    }
+  }
+}
+```
+
+Users need read access to the marketplace repository. Users can also add a marketplace themselves from the gear icon next to the marketplace dropdown in **Customize → Plugins**.
+
+A `directory` marketplace suits plugin authors testing a change. For GitHub and git marketplaces, set `autoUpdate` in managed settings to keep everyone on the latest plugin versions.
+
+## Enterprise-managed settings
+
+Managed settings let admins set policy that users cannot override. The GitHub Copilot app is a supported client, along with Copilot CLI, VS Code, Copilot cloud agent and JetBrains IDEs. The plugin and MCP keys from the [enterprise managed settings reference](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings):
+
+| Setting | Effect |
+| --- | --- |
+| `extraKnownMarketplaces` | Adds your marketplaces for everyone. Set `autoUpdate` to control plugin updates from that marketplace. |
+| `strictKnownMarketplaces` | Restricts plugin installation to the marketplaces you list. An empty array means complete lockdown. |
+| `enabledPlugins` | Keys use `PLUGIN-NAME@MARKETPLACE-NAME`. `true` requires the plugin to be enabled and `false` requires it to be disabled. |
+| `allowedMcpServers` | Only matching servers can run, by `serverName`, `serverUrl` or `serverCommand`. An empty array blocks all servers except built-in defaults. |
+| `deniedMcpServers` | Matching servers are always blocked, even if they are also on the allow list. |
+| `features.computerUse` | Set to `false` to stop users enabling computer use. |
+| `sandbox` | Enforces minimum local sandbox restrictions. Requires app version 1.1.26 or later. |
+| `forceRemoteSettingsRefresh` | Requires a fresh download of server-managed settings at startup. If the download fails, affected operations are restricted. |
+
+A policy that only allows your own marketplace and requires your starter plugin looks like this:
+
+```json
+{
+  "strictKnownMarketplaces": [
+    { "source": "github", "repo": "your-org/copilot-plugins" }
+  ],
+  "extraKnownMarketplaces": {
+    "your-org": {
+      "source": { "source": "github", "repo": "your-org/copilot-plugins" }
+    }
+  },
+  "enabledPlugins": {
+    "starter-kit@your-org": true
+  },
+  "deniedMcpServers": [
+    { "serverName": "unapproved-db" }
+  ]
+}
+```
+
+
+### How policy reaches devices
+
+From [Choosing how to deploy enterprise-managed settings](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/deploy-managed-settings):
+
+| Method | Where it lives | Notes |
+| --- | --- | --- |
+| Server-managed | `copilot/managed-settings.json` in your enterprise's `.github-private` repository | The default. Reviewed like code, supports enterprise team overrides, reaches clients within about an hour. Applies to users licensed through your enterprise. |
+| MDM | Windows: `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\GitHubCopilot`. macOS: managed preferences for `com.github.copilot` | Local clients only. Applies whatever the user's license source. Not available on Linux. |
+| File-based | macOS `/Library/Application Support/GitHubCopilot/managed-settings.json`, Windows `%ProgramFiles%\GitHubCopilot\managed-settings.json`, Linux `/etc/github-copilot/managed-settings.json` | Local clients only. Restart the app to load changes. |
+
+When sources conflict, MDM wins over server-managed, which wins over file-based, which wins over user settings. `sandbox` and the `permissions` keys combine in the most restrictive direction instead.
+
+Use MDM or file-based delivery for rules that must hold without a server response. Use server-managed settings for things that change often, like plugin lists. Check for errors under **AI controls → Agents → Copilot settings validation** in your enterprise settings.
+
+## A rollout pattern that works
+
+1. **Week 1:** ship `copilot-instructions.md` and two or three skills in your top repositories. No admin change needed.
+2. **Week 2:** stand up the private marketplace with a starter-kit plugin. Register it for pilot users through `extraKnownMarketplaces`.
+3. **Org-wide launch:** add the marketplace, require the starter kit and set your MCP allow or deny list in managed settings, all on the same day as the launch email.
+4. **After launch:** turn on `strictKnownMarketplaces` once people have what they need from your catalog. Track requests for new plugins in the feedback channel and add the good ones.
+
+## Checklist
+
+These items are in the [CoE checklist](/coe/checklist/):
+
+- Ship org custom instructions and starter skills in top repositories.
+- Publish a private plugin marketplace with a starter kit.
+- Configure managed settings for marketplaces, required plugins and MCP servers.
+- Decide whether to restrict to approved marketplaces only.
+
+Related: [governance](/coe/governance/), [connector and MCP approval](/coe/governance/#connectors-and-mcp), and the [custom agent and skill starter kit](/resources/#customization).

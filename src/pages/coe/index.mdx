@@ -1,0 +1,67 @@
+---
+layout: ../../layouts/Doc.astro
+title: Run a Copilot app Center of Excellence
+eyebrow: Center of Excellence
+description: The roles, cadence and metrics that turn a pilot into an organization-wide habit.
+---
+
+A Center of Excellence (CoE) is a small group that owns adoption of the GitHub Copilot app. It sets defaults, builds shared assets, trains people and measures results. Most organizations start with a lead and a few champions, then grow the champion network as more teams join.
+
+Work through the [rollout checklist](/coe/checklist/) to track progress phase by phase.
+
+## Charter
+
+Write a one-paragraph charter and share it with the sponsor. A good charter answers four questions:
+
+1. Which teams and repositories are in scope this quarter?
+2. What outcome are you trying to change, such as PR cycle time or time to first commit?
+3. Who decides policy questions like cloud automation tools and sandbox defaults?
+4. How and when will you report progress?
+
+## Roles
+
+| Role | Who | Responsibilities | Time |
+| --- | --- | --- | --- |
+| **Executive sponsor** | Director or VP | Sets the goal, funds time, clears blockers, attends the monthly review | 1 hour a month |
+| **CoE lead** | Senior engineer, EM or developer productivity owner | Runs the program, owns the checklist, reports metrics, runs office hours | 20 to 50 percent |
+| **Champions** | One per team | Demos, first-line support, prompt library and repository config upkeep | 2 to 4 hours a week |
+| **Admin** | GitHub organization or enterprise owner | Seats, policies and settings for cloud agent, automations and remote control | As needed |
+| **Security partner** | AppSec or platform security | Reviews repository configuration practices, sandbox defaults and automation tool scopes | As needed |
+
+### Responsibility matrix
+
+R is responsible, A is accountable, C is consulted and I is informed.
+
+| Activity | Sponsor | Lead | Champions | Admin | Security |
+| --- | --- | --- | --- | --- | --- |
+| Set goals and scope | A | R | C | I | I |
+| Seats and policies | I | C | I | A/R | C |
+| Repository configuration | I | A | R | I | C |
+| Prompt library | I | A | R | I | I |
+| Automation tool scopes | I | C | R | C | A |
+| Metrics and reporting | I | A/R | C | C | I |
+
+## Cadence
+
+| Meeting | Who | When | Purpose |
+| --- | --- | --- | --- |
+| Office hours | Lead and champions, open to all | Weekly, 30 minutes | Live help, demos of new workflows |
+| Champion sync | Lead and champions | Every two weeks | Share patterns, update the prompt library, surface blockers |
+| Adoption review | Sponsor, lead, champions | Monthly | Review metrics, decide next month's focus |
+| Maturity check | Lead | Quarterly | Revisit the checklist and record each team's phase |
+
+## Governance
+
+Settle policy before the pilot grows: repository configuration review, automation tool scopes, sandbox defaults, connector approval and a ring-based rollout. The [governance guide](/coe/governance/) covers each one. [Customizations and plugin marketplaces](/coe/customizations/) covers shipping instructions, skills and plugins to everyone and controlling them with enterprise-managed settings.
+
+## Measure what matters
+
+Track the activation funnel from awareness to weekly use, plus delivery and quality outcomes against a baseline. The [measurement guide](/coe/measurement/) has the metrics, a pulse survey and an ROI worksheet.
+
+## Tools for the CoE team
+
+- [Maturity assessment](/coe/assessment/): ten questions that point you to a phase.
+- [Rollout checklist](/coe/checklist/): track progress and export it to Markdown or a GitHub issue.
+- [Playbooks](/playbooks/): week-by-week plans by organization size.
+- [Resource library](/resources/): admin briefing, launch comms, training and measurement templates.
+- [Community of practice](/community/): champion directory, office hours and the feedback loop.

@@ -1,0 +1,91 @@
+---
+layout: ../../layouts/Doc.astro
+title: Governance
+eyebrow: Center of Excellence
+description: Policies, controls and review practices for rolling out the Copilot app safely.
+---
+
+Settle these decisions in the first week. Each section names the owner from the [operating model](/coe/#roles) and links to a checklist item.
+
+## Controlled rollout
+
+Move fast and keep the controls in policy, not in a long gated pilot. A two-week validation sprint finds the real blockers. After that, turn the app on for everyone and use managed settings to hold back anything that is not ready.
+
+| Ring | When | Who | Move on when |
+| --- | --- | --- | --- |
+| 0. CoE | Days 1 to 3 | Lead, champions, one admin, one security partner | Install, sign-in, first session and managed settings work |
+| 1. Validation sprint | Weeks 1 and 2 | 20 to 50 people across roles, including a business team | No open blocker in admin, security or support |
+| 2. Org-wide, default on | Week 3 or 4 | Everyone with a Copilot seat | Support load is steady after 48 hours |
+
+Decisions to record:
+
+- **Update channel.** The app has an **Update channel** setting. Keep everyone on the default channel. {/* TODO: docs.github.com does not list the available channels or say whether admins can set one centrally. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+- **Minimum version.** Adding the `sandbox` key to managed settings blocks app versions older than 1.1.26. There is no documented way to pin or defer app versions centrally, so plan to keep up with updates. {/* TODO: version pinning or deferral for managed fleets is not documented. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+- **Feature access.** Launch with everything that passed validation. Hold back specific features such as cloud automations or unapproved MCP servers through organization policy and [managed settings](/coe/customizations/#enterprise-managed-settings) instead of delaying the whole launch.
+
+## Repository configuration
+
+`.github/github-app.yml` can run scripts with GitHub credentials. The app asks each user to review and accept the file before applying it, and again whenever it changes.
+
+- Add the file to `CODEOWNERS` and require code owner review, the same as CI workflows.
+- Prefer pinned package manager commands over scripts that download and run remote code.
+- Keep secrets out of the file. Scripts should read credentials from the environment.
+
+## Automations
+
+Cloud automations run with the tools you select. Pick only what the task needs.
+
+- Separate read-only automations, such as briefings, from ones that write, such as opening pull requests.
+- Name an approver for write access and record each approval.
+- Review automations quarterly and retire the ones nobody reads.
+
+## Sandboxes
+
+Local sandboxing limits filesystem, network and credential access for agent-run tools. Cloud sandboxes keep the whole session off the developer's machine.
+
+- Choose a default for each repository and write it in the project instructions.
+- Keep a network allow list for builds that need package registries or internal services.
+- Use cloud sandboxes for untrusted inputs, such as reproducing a bug from an external report.
+
+## Connectors and MCP
+
+Connectors and MCP servers let sessions read and act on data outside GitHub, such as Sentry issues or Microsoft 365 content through the WorkIQ plugin. Check how each one authenticates and what it can read and write before you approve it.
+
+1. Keep an approved list and publish it with this site.
+2. Review each new request for the data it can read and write, how it authenticates, and where data leaves your network. The [security role page](/roles/security-admin/#sec-connectors) has a prompt for this review.
+3. For Microsoft 365 sources, such as the WorkIQ plugin in **Customize → Featured**, confirm the tenant admin has enabled the integration before users try to connect. {/* TODO: Microsoft 365 tenant admin prerequisites for WorkIQ are not documented. Who would know: your Microsoft 365 admin, or GitHub through github/app issues. */}
+4. Prefer read-only scopes. Grant write access per use case.
+5. Enforce the list with the `allowedMcpServers` and `deniedMcpServers` managed settings, and ship approved servers inside a plugin from your private marketplace. See [customizations and plugin marketplaces](/coe/customizations/).
+
+## Restricted and offline environments
+
+Some teams work on networks with tight egress or need to use their own model endpoints.
+
+- **Network allow lists.** Start from the [Copilot allowlist reference](https://docs.github.com/en/copilot/reference/copilot-allowlist-reference), then test sign-in, session start and a cloud sandbox from inside the restricted network. Add the hosts your MCP servers and model providers use.
+- **Bring your own key (BYOK).** The app can use models from OpenAI, Azure OpenAI, Microsoft Foundry, Anthropic, Ollama, Foundry Local, LM Studio or any OpenAI-compatible endpoint. This is in public preview. Users still sign in with GitHub but do not need a Copilot plan for BYOK models. See [Adding LLM models to the GitHub Copilot app](https://docs.github.com/en/copilot/how-tos/github-copilot-app/use-byok-models). For organization-wide custom models, use the **Configure custom models** policy, which applies to the app.
+- **Fully offline use** is not something to promise. Pilot it with one team first.
+
+## Hybrid GitHub and Azure DevOps organizations
+
+Many organizations keep work items or repositories in Azure DevOps.
+
+- Start the pilot with repositories hosted on GitHub so every workflow on this site applies.
+- Teams on Azure DevOps can clone repositories with a Git URL, and install the Azure DevOps plugin and canvas from **Customize → Featured**.
+- Write down which workflows Azure DevOps teams can use today and which need GitHub, and revisit each quarter. {/* TODO: docs.github.com does not document Azure DevOps support for My work, agent merge or automations. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+
+## Where artifacts live
+
+Sessions can create Word, PowerPoint and Excel files, Markdown documents and images.
+
+- By default these files live on the user's machine, in the session or the repository.
+- To share a file, save or move it to OneDrive or SharePoint and share it from there. Keep a copy in the session if you want to keep iterating on it with the agent.
+- Commit files that belong with code, such as specs and runbooks, to the repository instead.
+- Apply your normal data classification. Generated files can contain whatever was in the prompt or connected sources.
+
+## Deep links and prompts
+
+Deep links can carry a prompt. Never put secrets or sensitive content in prompts embedded in links, and treat shared prompts like any other internal document.
+
+## Security review
+
+Run `/security-review` on changes before a pull request, and ask your AppSec partner to review the rollout once per ring. Track findings like any other security work.

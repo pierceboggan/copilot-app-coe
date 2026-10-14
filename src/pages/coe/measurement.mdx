@@ -1,0 +1,69 @@
+---
+layout: ../../layouts/Doc.astro
+title: Measurement
+eyebrow: Center of Excellence
+description: The funnel, outcome metrics, survey and ROI worksheet for proving the program works.
+---
+
+Capture a baseline on day 1 of the validation sprint. With a fast org-wide launch, watch the funnel daily during launch week, then weekly. Report trends rather than single numbers.
+
+## Activation funnel
+
+A default-on launch gets the app to everyone quickly. Many of them never start a session. Track each step so you can fix the biggest drop first.
+
+| Step | Definition | Common reason people stall | What helps |
+| --- | --- | --- | --- |
+| Aware | Knows the app exists | Never heard of it, even with a Copilot seat | [Launch comms](/resources/#launch-comms) and "try this" prompts in team channels |
+| Installed | Downloaded and installed | Unsure it is approved | A clear "approved for use" line in the launch email |
+| Opened | Signed in at least once | Sign-in or account confusion | First-hour quickstart in the kickoff |
+| First session | Ran one session to completion | Blank prompt box | [Starter prompts](/resources/#starter-prompts) that run on day one |
+| Weekly active | Used the app in four of the last six weeks | No workflow that sticks | Role-based use cases and one automation per team |
+
+Copilot usage reports cover activity across surfaces, but they do not map one-to-one to these steps. For Aware and Installed, use your launch survey and device management inventory. To collect your own usage data, the `telemetry` key in [enterprise managed settings](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings) exports OpenTelemetry data to a collector you choose.
+
+{/* TODO: docs.github.com does not yet list Copilot app-specific fields in the usage metrics reference. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+
+## Outcome metrics
+
+| Category | Metric | Where to get it |
+| --- | --- | --- |
+| Launch | Days from kickoff to org-wide enablement (target: 30 or fewer) | Your rollout plan |
+| Launch | Share of seat holders who opened the app in the first 14 days after launch | Copilot usage reporting for your organization |
+| Launch | Median days from launch to a person's first session | Copilot usage reporting |
+| Adoption | Share of seat holders who are weekly active at day 30, 60 and 90 | Copilot usage reporting |
+| Adoption | Share of weekly active users who used the app for something other than code, such as docs, Office files or research | Monthly survey below |
+| Adoption | Repositories with custom instructions or skills, and installs of your starter-kit plugin | Code search and your plugin marketplace |
+| Adoption | Weekly active users of the app | Copilot usage reporting for your organization |
+| Adoption | Repositories with a reviewed `.github/github-app.yml` | Code search for the file across your organization |
+| Adoption | Active automations per team | Automations list, reviewed in the monthly adoption review |
+| Delivery | Median PR cycle time, open to merge | Pull request data from the GitHub API |
+| Delivery | Review turnaround time | Pull request review data |
+| Quality | Change failure rate or reverts per week | Your incident or deployment tracking |
+| Reliability | Crashes and hangs reported per week | Feedback channel and office hours notes |
+| Sentiment | "The app saves me time" score, 1 to 5 | Monthly survey below |
+
+Measure teams, not individuals. Agent activity is a poor proxy for anyone's performance.
+
+## Monthly pulse survey
+
+Keep it under two minutes. Download the [survey template](/resources/files/pulse-survey.md).
+
+1. In the last month, how often did you use the Copilot app? (Never, monthly, weekly, daily)
+2. "The app saves me time." (1 strongly disagree to 5 strongly agree)
+3. Which workflow saved you the most time? (Free text)
+4. What stopped you from using it more? (Free text)
+5. Did the app crash, hang or lose work this month? (Yes or no, with details)
+6. Besides code, what did you use it for? (Research, docs, Office files, data analysis, automations, triage, presentations, other)
+
+## ROI worksheet
+
+The [ROI worksheet](/resources/files/roi-worksheet.csv) multiplies hours saved per workflow by the people using it and a loaded hourly cost. Fill in the hours from your survey and time studies, not from vendor claims.
+
+| Input | Example | Source |
+| --- | --- | --- |
+| Weekly active users | 120 | Usage reporting |
+| Hours saved per user per week | 1.5 | Survey median |
+| Loaded cost per hour | Your finance number | Finance |
+| Seats and other costs per month | Your contract | Procurement |
+
+Show the result as a range. Use the survey's 25th and 75th percentile for hours saved.

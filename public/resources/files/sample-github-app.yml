@@ -1,0 +1,21 @@
+# Sample .github/github-app.yml for a Node.js repository.
+# Review every script before you accept this file. Scripts run with your GitHub credentials.
+# Reference: https://docs.github.com/en/copilot/reference/github-copilot-app-reference/repository-configuration
+
+instructions: |
+  Use npm. Run `npm test` before proposing a pull request.
+  Follow the existing ESLint and Prettier configuration.
+  Never commit secrets, .env files or generated build output.
+  Keep pull requests focused on one change and fill in the PR template.
+
+scripts:
+  - name: Setup
+    command: npm ci
+    triggers:
+      - session.create
+  - name: Run
+    command: npm run dev
+  - name: Test
+    command: npm test
+
+server_ready_pattern: '(?i)Local:\s+(https?://\S+)'

@@ -1,0 +1,210 @@
+---
+import Octicon from '../../components/Octicon.astro';
+import { phases, totalItems } from '../../data/checklist';
+import Base from '../../layouts/Base.astro';
+import { href } from '../../lib/paths';
+
+const resolve = (url: string) => (url.startsWith('/') ? href(url) : url);
+---
+<Base title="CoE checklist" description="A phased checklist for rolling out the GitHub Copilot app.">
+  <section class="coe-page-hero">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2" style="color:#d2a8ff">Center of Excellence</p>
+      <h1 class="coe-h1 mb-3">Rollout checklist</h1>
+      <p class="coe-lede mb-4">
+        {totalItems} steps across four phases. Your progress is saved in this browser, so you can come back any time.
+      </p>
+      <div style="max-width: 560px">
+        <div class="d-flex flex-justify-between f5 mb-1">
+          <span>Overall progress</span>
+          <span data-coe-overall-label>0 of {totalItems}</span>
+        </div>
+        <span class="Progress Progress--large" style="background:#30363d">
+          <span class="Progress-item color-bg-success-emphasis" data-coe-overall-bar style="width:0%"></span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <div class="coe-container py-6">
+    <div class="d-flex flex-column flex-lg-row gap-6">
+      <aside class="flex-shrink-0" style="width:100%; max-width:260px">
+        <nav class="coe-toc position-sticky" style="top:88px" aria-label="Phases">
+          <h2 class="f6 text-uppercase color-fg-muted mb-2">Phases</h2>
+          {phases.map((phase, i) => (
+            <a href={`#${phase.id}`} class="d-flex flex-justify-between">
+              <span>{i + 1}. {phase.name}</span>
+              <span class="Counter" data-coe-phase-counter={phase.id}>0/{phase.items.length}</span>
+            </a>
+          ))}
+          <button type="button" class="btn btn-sm btn-danger mt-3" data-coe-reset>
+            <Octicon name="history" /> Reset progress
+          </button>
+          <p class="f6 color-fg-muted mt-2" aria-live="polite" data-coe-reset-status></p>
+          <h2 class="f6 text-uppercase color-fg-muted mt-4 mb-2">Export</h2>
+          <div class="d-flex flex-column gap-2">
+            <button type="button" class="btn btn-sm" data-coe-export="download">
+              <Octicon name="download" /> Download Markdown
+            </button>
+            <button type="button" class="btn btn-sm" data-coe-export="copy">
+              <Octicon name="copy" /> Copy Markdown
+            </button>
+            <button type="button" class="btn btn-sm" data-coe-export="issue">
+              <Octicon name="issue-opened" /> Open as GitHub issue
+            </button>
+          </div>
+          <p class="f6 color-fg-muted mt-2" aria-live="polite" data-coe-export-status></p>
+        </nav>
+      </aside>
+
+      <div class="flex-1 min-width-0 d-flex flex-column gap-5">
+        {phases.map((phase, i) => (
+          <section id={phase.id} class="Box" aria-labelledby={`${phase.id}-heading`} style="scroll-margin-top: 88px">
+            <div class="Box-header">
+              <div class="d-flex flex-wrap flex-items-center flex-justify-between gap-2 mb-1">
+                <h2 id={`${phase.id}-heading`} class="h3">
+                  Phase {i + 1}: {phase.name}
+                </h2>
+                <span class="Label Label--done">{phase.timeframe}</span>
+              </div>
+              <p class="color-fg-muted mb-2">{phase.goal}</p>
+              <span class="Progress">
+                <span class="Progress-item color-bg-success-emphasis" data-coe-phase-bar={phase.id} style="width:0%"></span>
+              </span>
+            </div>
+            <ul class="list-style-none">
+              {phase.items.map((item) => (
+                <li class="coe-check-item" data-coe-item={item.id}>
+                  <input type="checkbox" id={`chk-${item.id}`} data-coe-check={item.id} data-phase={phase.id} />
+                  <div>
+                    <label for={`chk-${item.id}`} class="coe-check-title text-bold d-block">{item.title}</label>
+                    <p class="color-fg-muted mb-1">{item.detail}</p>
+                    <div class="d-flex flex-wrap flex-items-center gap-2 f6">
+                      <span class="Label Label--secondary"><Octicon name="person" /> {item.owner}</span>
+                      {item.link && (
+                        <a href={resolve(item.link.url)}>
+                          {item.link.label}
+                          {!item.link.url.startsWith('/') && <Octicon name="link-external" />}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div class="Box-footer color-bg-subtle f6">
+              <strong>Exit criteria:</strong> {phase.exitCriteria}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { phases } from '../../data/checklist';
+  import { checklistMarkdown, newIssueUrl } from '../../lib/checklist-export';
+  import { readRepo } from '../../scripts/launch-links';
+
+  const STORAGE_KEY = 'coe:checklist';
+  const boxes = [...document.querySelectorAll<HTMLInputElement>('input[data-coe-check]')];
+
+  function load(): Set<string> {
+    try {
+      const parsed: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]');
+      return new Set(Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === 'string') : []);
+    } catch {
+      return new Set();
+    }
+  }
+
+  function save(done: Set<string>) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...done]));
+    } catch {
+      // Progress still works for this visit if storage is unavailable.
+    }
+  }
+
+  function render(done: Set<string>) {
+    const byPhase = new Map<string, { done: number; total: number }>();
+    for (const box of boxes) {
+      const id = box.dataset.coeCheck ?? '';
+      const phase = box.dataset.phase ?? '';
+      box.checked = done.has(id);
+      box.closest('li')?.classList.toggle('is-done', box.checked);
+      const stats = byPhase.get(phase) ?? { done: 0, total: 0 };
+      stats.total++;
+      if (box.checked) stats.done++;
+      byPhase.set(phase, stats);
+    }
+    for (const [phase, stats] of byPhase) {
+      const bar = document.querySelector<HTMLElement>(`[data-coe-phase-bar="${phase}"]`);
+      if (bar) bar.style.width = `${(stats.done / stats.total) * 100}%`;
+      const counter = document.querySelector(`[data-coe-phase-counter="${phase}"]`);
+      if (counter) counter.textContent = `${stats.done}/${stats.total}`;
+    }
+    const total = boxes.length;
+    const completed = boxes.filter((b) => b.checked).length;
+    const overallBar = document.querySelector<HTMLElement>('[data-coe-overall-bar]');
+    if (overallBar) overallBar.style.width = `${(completed / total) * 100}%`;
+    const overallLabel = document.querySelector('[data-coe-overall-label]');
+    if (overallLabel) overallLabel.textContent = `${completed} of ${total}`;
+  }
+
+  const done = load();
+  render(done);
+
+  for (const box of boxes) {
+    box.addEventListener('change', () => {
+      const id = box.dataset.coeCheck ?? '';
+      if (box.checked) done.add(id);
+      else done.delete(id);
+      save(done);
+      render(done);
+    });
+  }
+
+  document.querySelector('[data-coe-reset]')?.addEventListener('click', () => {
+    if (!confirm('Clear all checklist progress saved in this browser?')) return;
+    done.clear();
+    save(done);
+    render(done);
+    const status = document.querySelector('[data-coe-reset-status]');
+    if (status) status.textContent = 'Progress cleared.';
+  });
+
+  const exportStatus = document.querySelector<HTMLElement>('[data-coe-export-status]');
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-coe-export]')) {
+    button.addEventListener('click', async () => {
+      const kind = button.dataset.coeExport;
+      if (kind === 'download') {
+        const blob = new Blob([checklistMarkdown(phases, done)], { type: 'text/markdown' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'copilot-app-rollout-checklist.md';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        if (exportStatus) exportStatus.textContent = 'Downloaded.';
+      } else if (kind === 'copy') {
+        try {
+          await navigator.clipboard.writeText(checklistMarkdown(phases, done));
+          if (exportStatus) exportStatus.textContent = 'Copied to clipboard.';
+        } catch {
+          if (exportStatus) exportStatus.textContent = 'Copy failed. Try Download instead.';
+        }
+      } else if (kind === 'issue') {
+        const repo = readRepo() || prompt('Repository for the issue (owner/name):')?.trim() || '';
+        if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
+          if (exportStatus) exportStatus.textContent = 'Enter a repository as owner/name.';
+          return;
+        }
+        // Item details are dropped so the prefilled body fits in a URL.
+        const body = checklistMarkdown(phases, done, false);
+        window.open(newIssueUrl(repo, 'Copilot app rollout checklist', body), '_blank', 'noopener');
+        if (exportStatus) exportStatus.textContent = `Opened a new issue form in ${repo}.`;
+      }
+    });
+  }
+</script>

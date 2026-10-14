@@ -1,0 +1,43 @@
+---
+import Octicon from './Octicon.astro';
+---
+<form id="repo-setting" class="Box p-3 d-flex flex-column gap-2" data-coe-repo-form>
+  <label for="coe-repo-input" class="text-bold d-flex flex-items-center gap-1">
+    <Octicon name="repo" /> Your repository
+  </label>
+  <p class="color-fg-muted f6 m-0">
+    "Open in Copilot app" buttons start a session in this repository. Saved only in this browser.
+  </p>
+  <div class="d-flex gap-2">
+    <input id="coe-repo-input" class="form-control input-sm flex-1" type="text" placeholder="owner/repo"
+      autocomplete="off" spellcheck="false" aria-describedby="coe-repo-status" />
+    <button class="btn btn-sm" type="submit">Save</button>
+  </div>
+  <p id="coe-repo-status" class="f6 m-0 color-fg-muted" aria-live="polite"></p>
+</form>
+
+<script>
+  import { isValidRepo } from '../lib/deeplink';
+  import { readRepo, writeRepo } from '../scripts/launch-links';
+
+  const form = document.querySelector<HTMLFormElement>('[data-coe-repo-form]');
+  const input = document.querySelector<HTMLInputElement>('#coe-repo-input');
+  const status = document.querySelector<HTMLElement>('#coe-repo-status');
+  if (form && input && status) {
+    input.value = readRepo();
+    status.textContent = input.value ? `Using ${input.value}` : 'No repository set.';
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const value = input.value.trim();
+      if (value && !isValidRepo(value)) {
+        status.textContent = 'Use the owner/repo format, for example octo-org/web.';
+        status.className = 'f6 m-0 color-fg-danger';
+        input.focus();
+        return;
+      }
+      writeRepo(value);
+      status.className = 'f6 m-0 color-fg-success';
+      status.textContent = value ? `Saved. Prompts will open in ${value}.` : 'Cleared.';
+    });
+  }
+</script>

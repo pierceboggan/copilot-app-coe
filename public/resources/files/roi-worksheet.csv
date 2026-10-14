@@ -1,0 +1,9 @@
+Input,Low,Expected,High,Notes
+Weekly active users,,,,From Copilot usage reporting
+Hours saved per user per week,,,,Survey 25th percentile / median / 75th percentile
+Loaded cost per hour,,,,From finance
+Working weeks per year,46,46,46,Adjust for holidays
+Annual value of time saved,=B2*B3*B4*B5,=C2*C3*C4*C5,=D2*D3*D4*D5,
+Annual seat and program cost,,,,Seats plus CoE time
+Net annual value,=B6-B7,=C6-C7,=D6-D7,
+Return on cost,=IF(B7=0,"",B8/B7),=IF(C7=0,"",C8/C7),=IF(D7=0,"",D8/D7),

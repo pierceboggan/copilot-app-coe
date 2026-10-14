@@ -1,0 +1,58 @@
+---
+layout: ../layouts/Doc.astro
+title: Which tool when
+eyebrow: Guide
+description: Start from the problem you have and pick the Copilot surface that fits it.
+---
+
+Copilot runs in several places. They share your seat and work well together. Use this page to point people at the right one for the job in front of them.
+
+## Start from the problem
+
+| I want to... | Use | Why |
+| --- | --- | --- |
+| Write or change code with my hands on the keyboard | Copilot in VS Code or your IDE | Inline suggestions and chat right where you edit |
+| Run several tasks at once, each on its own branch | Copilot app | Parallel sessions in separate working trees |
+| Take an issue all the way to a reviewed pull request | Copilot app | Plan mode, diff review and PR creation in one place |
+| Work in a terminal or script an agent | Copilot CLI | Agent in your shell, easy to use over SSH or in scripts |
+| Hand off a task and get a pull request back later | Copilot cloud agent | Works on GitHub in the background, assigned from an issue |
+| Run the same prompt every morning or on an event | Automations in the Copilot app | Scheduled or on-demand runs with a fixed tool set |
+| Coordinate several agents on a larger job | Child sessions, or dynamic workflows where available | One session splits work and tracks the results |
+| Analyze a spreadsheet or draft a deck without a repository | Copilot app chat with an Office canvas | No branch needed, files stay on your machine |
+| Ask a question about my organization's code | Copilot app or Copilot Chat on GitHub.com | Search across repositories you can read |
+
+{/* Dynamic workflows appear in the public release notes at github.com/github/app/releases. TODO: no docs.github.com page covers limits or plan availability yet. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+
+## More than writing code
+
+The app isn't only for code. Plenty of the work it takes on never touches a repository: start a chat, attach a file or connect a source, and ask. Each row links to role pages with prompts you can run today.
+
+| I want to... | What the app does | See it on |
+| --- | --- | --- |
+| Research a topic or pull context together | Reads issues, docs, the web and connected sources such as Teams, then writes a sourced summary or spec | [PM](/roles/product-manager/#spec-from-work-context), [Business](/roles/business-ops/#ops-m365-context), [Sales](/roles/sales/#sales-account-brief) |
+| Write docs, blog posts or release notes | Drafts from the real code and tests samples before you publish | [DevRel](/roles/devrel-support/#dr-docs-gap), [DevRel blog](/roles/devrel-support/#dr-blog), [PM](/roles/product-manager/#release-notes) |
+| Create Word, Excel or PowerPoint files | Builds and edits them in Office canvases, no repository needed | [Business](/roles/business-ops/#ops-office-files), [Marketing](/roles/marketing/#mkt-deck) |
+| Analyze data | Cleans a CSV, finds themes, builds a forecast or tracker, and changes it when you ask | [PM](/roles/product-manager/#pm-data-analysis), [Business](/roles/business-ops/#ops-csv-reviews), [Business forecast](/roles/business-ops/#ops-forecast) |
+| Run a job on a schedule | Automations run the same prompt every morning or week and report back | [Manager](/roles/engineering-manager/#em-coordinator), [Engineer](/roles/engineer/#morning-automation), [PM](/roles/product-manager/#weekly-status) |
+| Triage feedback or issues | Groups items into themes, dedupes and drafts next steps | [PM feedback](/roles/product-manager/#feedback-synthesis), [PM issues](/roles/product-manager/#issue-triage), [Sales](/roles/sales/#sales-feedback) |
+| Build a presentation | Drafts a deck from real data, then runs a critique pass | [PM](/roles/product-manager/#pm-presentation), [Sales](/roles/sales/#sales-deck), [Marketing](/roles/marketing/#mkt-deck) |
+
+The Word, Excel and PowerPoint canvases may not be on for every account yet. If they are not in the **Canvas** view under **Customize**, ask the agent to write the file with a script and open it in Office.
+
+{/* TODO: docs.github.com lists document canvases as an example use case but does not state availability by plan or platform. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+
+## Rules of thumb
+
+- **Hands on, one task:** your editor.
+- **Hands off, many tasks:** the app.
+- **Repeats on a schedule:** an automation.
+- **Not code at all:** the app, in a chat with an Office canvas or a connector.
+- **Should finish while you are away:** a cloud sandbox or the cloud agent.
+
+## They work together
+
+A typical day mixes them. You might start a cloud agent task from an issue, review and finish the resulting pull request in the app, then fix a last edge case in your editor. The work lives on GitHub branches, so you can move between surfaces without copying anything.
+
+## Share this page
+
+Link it in your launch email and FAQ. When someone asks "should I use the app for this?", send them the table.

@@ -1,0 +1,108 @@
+---
+import Octicon from '../components/Octicon.astro';
+import { href } from '../lib/paths';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Everything you need to run a Center of Excellence for the GitHub Copilot app.' } = Astro.props;
+const pageTitle = title === 'Home' ? 'GitHub Copilot app Enablement Center' : `${title} · Copilot app Enablement Center`;
+const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+
+const nav = [
+  { label: 'Get started', path: '/get-started/' },
+  { label: 'Use cases', path: '/roles/' },
+  { label: 'Center of Excellence', path: '/coe/' },
+  { label: 'Checklist', path: '/coe/checklist/' },
+  { label: 'Resources', path: '/resources/' },
+  { label: 'Playbooks', path: '/playbooks/' },
+];
+const isCurrent = (p: string) =>
+  p === '/coe/' ? path.startsWith('/coe/') && !path.startsWith('/coe/checklist') : path.startsWith(p);
+---
+<!doctype html>
+<html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
+    <title>{pageTitle}</title>
+    <script is:inline>
+      try {
+        const mode = localStorage.getItem('coe:color-mode');
+        if (mode === 'light' || mode === 'dark') document.documentElement.dataset.colorMode = mode;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="coe-skip-link" href="#main">Skip to content</a>
+    <header class="coe-header">
+      <div class="coe-container d-flex flex-items-center flex-justify-between py-3 gap-3">
+        <a href={href('/')} class="d-flex flex-items-center gap-2 text-bold" aria-label="Copilot app Enablement Center home">
+          <Octicon name="mark-github" size={32} />
+          <span class="d-none d-md-inline">Copilot app <span style="opacity: 0.6">Enablement Center</span></span>
+        </a>
+        <nav class="coe-nav d-flex flex-items-center gap-1 flex-wrap" aria-label="Primary">
+          {nav.map((item) => (
+            <a href={href(item.path)} aria-current={isCurrent(item.path) ? 'page' : undefined}>{item.label}</a>
+          ))}
+        </nav>
+        <div class="d-flex flex-items-center gap-2">
+          <a class="btn-octicon" href={href('/search/')} aria-label="Search" aria-current={path.startsWith('/search') ? 'page' : undefined}>
+            <Octicon name="search" />
+          </a>
+          <button type="button" class="btn-octicon btn-invisible" data-coe-theme-toggle aria-label="Toggle color mode">
+            <Octicon name="sun" class="coe-icon-light" />
+          </button>
+          <a class="btn btn-sm d-none d-sm-inline-flex" href="https://docs.github.com/en/copilot/how-tos/github-copilot-app">
+            Docs
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" data-pagefind-body>
+      <slot />
+    </main>
+
+    <footer class="coe-footer">
+      <div class="coe-container d-flex flex-wrap flex-justify-between gap-4">
+        <div class="d-flex flex-items-center gap-2">
+          <Octicon name="mark-github" size={24} />
+          <span>Copilot app Enablement Center. A community resource, not official GitHub documentation.</span>
+        </div>
+        <nav class="d-flex gap-3 flex-wrap" aria-label="Footer">
+          <a href={href('/which-tool/')}>Which tool when</a>
+          <a href={href('/coe/customizations/')}>Customizations</a>
+          <a href={href('/community/')}>Community</a>
+          <a href={href('/coe/assessment/')}>Maturity assessment</a>
+          <a href="https://docs.github.com/en/copilot/how-tos/github-copilot-app">Copilot app docs</a>
+          <a href="https://docs.github.com/en/copilot/reference/github-copilot-app-reference/repository-configuration">Repository configuration</a>
+          <a href="https://docs.github.com/en/copilot/how-tos/github-copilot-app/open-with-deep-links">Deep links</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      const toggle = document.querySelector<HTMLButtonElement>('[data-coe-theme-toggle]');
+      const root = document.documentElement;
+      const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const effective = () =>
+        root.dataset.colorMode === 'auto' ? (prefersDark() ? 'dark' : 'light') : root.dataset.colorMode;
+      const sync = () => toggle?.setAttribute('aria-label', `Switch to ${effective() === 'dark' ? 'light' : 'dark'} mode`);
+      sync();
+      toggle?.addEventListener('click', () => {
+        const next = effective() === 'dark' ? 'light' : 'dark';
+        root.dataset.colorMode = next;
+        try {
+          localStorage.setItem('coe:color-mode', next);
+        } catch {}
+        sync();
+      });
+    </script>
+  </body>
+</html>

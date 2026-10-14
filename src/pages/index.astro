@@ -1,0 +1,167 @@
+---
+import Octicon from '../components/Octicon.astro';
+import { beyondCode } from '../data/beyondCode';
+import { phases, totalItems } from '../data/checklist';
+import { roles } from '../data/roles';
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/paths';
+
+const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
+---
+<Base title="Home">
+  <section class="coe-hero">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-3">Center of Excellence</p>
+      <h1 class="coe-display mb-4" style="max-width: 900px">
+        Bring the GitHub Copilot app to your whole organization
+      </h1>
+      <p class="coe-lede mb-5">
+        Use cases for every role, a rollout checklist and the operating model to run it. Validate in two weeks, then turn
+        it on for everyone.
+      </p>
+      <div class="d-flex gap-2 flex-wrap">
+        <a class="btn btn-large btn-primary" href={href('/coe/checklist/')}>
+          <Octicon name="checklist" /> Open the checklist
+        </a>
+        <a class="btn btn-large" href={href('/roles/')}>Explore use cases</a>
+      </div>
+      <div class="d-flex gap-6 mt-8 flex-wrap">
+        <div><div class="coe-stat">{phases.length}</div><div style="color:#9198a1">rollout phases</div></div>
+        <div><div class="coe-stat">{totalItems}</div><div style="color:#9198a1">checklist items</div></div>
+        <div><div class="coe-stat">{useCaseCount}</div><div style="color:#9198a1">ready-to-run prompts</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="coe-section" aria-labelledby="beyond-code">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2">More than writing code</p>
+      <h2 class="coe-h2 mb-2" id="beyond-code">One app for the work around the code, too</h2>
+      <p class="coe-lede mb-5">
+        Research, docs, Office files, data analysis, automations, triage and presentations. Every role on the team has
+        work the app can take on, with or without a repository.
+      </p>
+      <div class="coe-grid">
+        {beyondCode.map((theme) => (
+          <div class="coe-card" id={`beyond-${theme.id}`}>
+            <span class="coe-card-icon"><Octicon name={theme.icon} size={20} /></span>
+            <h3>{theme.title}</h3>
+            <p>{theme.summary}</p>
+            <ul class="list-style-none f6 mt-auto">
+              {theme.links.map((l) => (
+                <li class="mt-1"><a href={href(l.path)}>{l.label} →</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p class="mt-4"><a href={href('/which-tool/#more-than-writing-code')}>Which tool for which job →</a></p>
+    </div>
+  </section>
+
+  <section class="coe-section coe-section-muted">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2">Start here</p>
+      <h2 class="coe-h2 mb-5">Pick your path</h2>
+      <div class="coe-grid">
+        <a class="coe-card" href={href('/get-started/')}>
+          <span class="coe-card-icon"><Octicon name="rocket" size={20} /></span>
+          <h3>New to the app</h3>
+          <p>Install, sign in and finish your first Plan mode session in under an hour.</p>
+        </a>
+        <a class="coe-card" href={href('/coe/')}>
+          <span class="coe-card-icon"><Octicon name="organization" size={20} /></span>
+          <h3>Leading the rollout</h3>
+          <p>Roles, cadence and metrics for running a Copilot app Center of Excellence.</p>
+        </a>
+        <a class="coe-card" href={href('/coe/checklist/')}>
+          <span class="coe-card-icon"><Octicon name="tasklist" size={20} /></span>
+          <h3>Tracking progress</h3>
+          <p>Work through Pilot, Expand, Scale and Optimize. Progress saves in your browser.</p>
+          <span class="mt-auto" data-coe-home-progress hidden>
+            <span class="d-flex flex-justify-between f6 color-fg-muted mb-1">
+              <span>Your progress</span><span data-coe-home-progress-label></span>
+            </span>
+            <span class="Progress"><span class="Progress-item color-bg-success-emphasis" data-coe-home-progress-bar style="width:0%"></span></span>
+          </span>
+        </a>
+        <a class="coe-card" href={href('/coe/assessment/')}>
+          <span class="coe-card-icon"><Octicon name="goal" size={20} /></span>
+          <h3>Not sure where you are</h3>
+          <p>Answer ten questions to find the rollout phase to focus on next.</p>
+        </a>
+        <a class="coe-card" href={href('/resources/')}>
+          <span class="coe-card-icon"><Octicon name="download" size={20} /></span>
+          <h3>Need templates</h3>
+          <p>Admin briefing, launch emails, starter prompts, demo day formats and an ROI worksheet.</p>
+        </a>
+        <a class="coe-card" href={href('/which-tool/')}>
+          <span class="coe-card-icon"><Octicon name="question" size={20} /></span>
+          <h3>Choosing a tool</h3>
+          <p>App, CLI, editor, automations or cloud agent. Start from the problem and pick the right one.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="coe-section">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2">Use cases</p>
+      <h2 class="coe-h2 mb-2">Built for every role on the team</h2>
+      <p class="coe-lede mb-5">Each role has a day-in-the-life walkthrough and prompts you can open straight in the app.</p>
+      <div class="coe-grid">
+        {roles.map((role) =>
+          role.available ? (
+            <a class="coe-card" href={href(`/roles/${role.slug}/`)}>
+              <span class="coe-card-icon"><Octicon name={role.icon} size={20} /></span>
+              <h3>{role.name}</h3>
+              <p>{role.tagline}</p>
+              <span class="f6 color-fg-accent mt-auto">{role.useCases?.length} use cases →</span>
+            </a>
+          ) : (
+            <div class="coe-card coe-card-disabled">
+              <span class="coe-card-icon"><Octicon name={role.icon} size={20} /></span>
+              <h3>{role.name}</h3>
+              <p>{role.tagline}</p>
+              <span class="Label mt-auto" style="align-self:flex-start">Coming soon</span>
+            </div>
+          ),
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="coe-section coe-section-muted">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2">Rollout</p>
+      <h2 class="coe-h2 mb-5">From validation sprint to org-wide launch in a month</h2>
+      <ol class="coe-grid list-style-none">
+        {phases.map((phase, i) => (
+          <li class="coe-card">
+            <span class="Label Label--done" style="align-self:flex-start">Phase {i + 1} · {phase.timeframe}</span>
+            <h3>{phase.name}</h3>
+            <p>{phase.goal}</p>
+            <a class="f6 mt-auto" href={href(`/coe/checklist/#${phase.id}`)}>{phase.items.length} checklist items →</a>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-4"><a href={href('/playbooks/')}>See week-by-week playbooks for a team of 10 and an organization of 1,000 →</a></p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { totalItems } from '../data/checklist';
+
+  try {
+    const done: string[] = JSON.parse(localStorage.getItem('coe:checklist') ?? '[]');
+    const count = Array.isArray(done) ? done.length : 0;
+    const wrap = document.querySelector<HTMLElement>('[data-coe-home-progress]');
+    if (wrap && count > 0) {
+      const pct = Math.round((Math.min(count, totalItems) / totalItems) * 100);
+      wrap.querySelector('[data-coe-home-progress-label]')!.textContent = `${count} of ${totalItems}`;
+      wrap.querySelector<HTMLElement>('[data-coe-home-progress-bar]')!.style.width = `${pct}%`;
+      wrap.hidden = false;
+    }
+  } catch {}
+</script>

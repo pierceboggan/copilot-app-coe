@@ -1,0 +1,50 @@
+---
+import type { SessionMode } from '../lib/deeplink';
+import Octicon from './Octicon.astro';
+
+interface Props {
+  prompt: string;
+  mode: SessionMode;
+}
+
+const { prompt, mode } = Astro.props;
+const modeLabel = { plan: 'Plan', interactive: 'Interactive', autopilot: 'Autopilot' }[mode];
+---
+<div class="coe-prompt">
+  <div class="coe-prompt-header">
+    <span class="d-inline-flex flex-items-center gap-1">
+      <Octicon name="copilot" />
+      Prompt · <span class="Label Label--secondary">{modeLabel} mode</span>
+    </span>
+    <span class="d-flex gap-2">
+      <button type="button" class="btn btn-sm" data-coe-copy={prompt}>
+        <Octicon name="copy" /> <span data-coe-copy-label>Copy</span>
+      </button>
+      <a class="btn btn-sm btn-primary" data-coe-launch data-prompt={prompt} data-mode={mode} href="#repo-setting">
+        <Octicon name="link-external" /> <span data-coe-launch-label>Set a repository to open</span>
+      </a>
+    </span>
+  </div>
+  <pre>{prompt}</pre>
+</div>
+
+<script>
+  import '../scripts/launch-links';
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('button[data-coe-copy]')) {
+    if (button.dataset.bound) continue;
+    button.dataset.bound = 'true';
+    button.addEventListener('click', async () => {
+      const label = button.querySelector('[data-coe-copy-label]');
+      try {
+        await navigator.clipboard.writeText(button.dataset.coeCopy ?? '');
+        if (label) label.textContent = 'Copied';
+      } catch {
+        if (label) label.textContent = 'Copy failed';
+      }
+      setTimeout(() => {
+        if (label) label.textContent = 'Copy';
+      }, 2000);
+    });
+  }
+</script>

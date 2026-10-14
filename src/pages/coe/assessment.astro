@@ -1,0 +1,93 @@
+---
+import Octicon from '../../components/Octicon.astro';
+import Base from '../../layouts/Base.astro';
+import { href } from '../../lib/paths';
+
+const answers = ['Not yet', 'Started', 'Mostly', 'Fully in place'];
+const questions = [
+  'A named sponsor and CoE lead own the Copilot app rollout.',
+  'Admins have reviewed policies, sandbox defaults and the approved connector list.',
+  'Pilot repositories have a reviewed .github/github-app.yml in CODEOWNERS.',
+  'You captured baseline metrics before people started using the app.',
+  'Every team in scope has a trained champion.',
+  'People have a starter prompt library and know where to ask for help.',
+  'Weekly office hours run, and crash or reliability reports reach the CoE.',
+  'Teams run automations they read every week.',
+  'You track the activation funnel from install to weekly active.',
+  'You report outcomes against the baseline to leadership each quarter.',
+];
+
+const levels = [
+  { id: 'pilot', name: 'Pilot', max: 7, text: 'Set up ownership, admin decisions and a small cohort first.' },
+  { id: 'expand', name: 'Expand', max: 15, text: 'The basics are in place. Train champions and widen to the next ring.' },
+  { id: 'scale', name: 'Scale', max: 23, text: 'Adoption is growing. Close funnel gaps and prove outcomes.' },
+  { id: 'optimize', name: 'Optimize', max: 30, text: 'The program runs well. Keep tuning workflows and measure each quarter.' },
+];
+---
+<Base title="Maturity assessment" description="Ten questions that tell you which rollout phase to focus on.">
+  <section class="coe-page-hero">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2" style="color:#d2a8ff">Center of Excellence</p>
+      <h1 class="coe-h1 mb-3">Maturity assessment</h1>
+      <p class="coe-lede">Answer ten questions to find the checklist phase to work on next. Nothing leaves your browser.</p>
+    </div>
+  </section>
+
+  <div class="coe-container py-6" style="max-width: 820px">
+    <form data-coe-assessment data-levels={JSON.stringify(levels)} class="d-flex flex-column gap-4">
+      {questions.map((q, i) => (
+        <fieldset class="coe-card p-3">
+          <legend class="f4 text-bold px-1">{i + 1}. {q}</legend>
+          <div class="d-flex flex-wrap gap-3 mt-2">
+            {answers.map((a, score) => (
+              <label class="d-flex flex-items-center gap-1 text-normal">
+                <input type="radio" name={`q${i}`} value={score} required={score === 0} />
+                {a}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ))}
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <Octicon name="goal" /> See my phase
+        </button>
+        <button type="reset" class="btn">Start over</button>
+      </div>
+    </form>
+
+    <div class="coe-card p-4 mt-5" data-coe-result hidden tabindex="-1">
+      <h2 class="f2 mb-2" data-coe-result-title></h2>
+      <p class="f4 mb-3" data-coe-result-text></p>
+      <a class="btn btn-primary" data-coe-result-link href={href('/coe/checklist/')}>
+        <Octicon name="checklist" /> Open this phase in the checklist
+      </a>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { href } from '../../lib/paths';
+
+  type Level = { id: string; name: string; max: number; text: string };
+  const form = document.querySelector<HTMLFormElement>('[data-coe-assessment]');
+  const result = document.querySelector<HTMLElement>('[data-coe-result]');
+  if (form && result) {
+    const levels: Level[] = JSON.parse(form.dataset.levels ?? '[]');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      let score = 0;
+      for (const [, value] of data) score += Number(value);
+      const level = levels.find((l) => score <= l.max) ?? levels[levels.length - 1];
+      result.querySelector('[data-coe-result-title]')!.textContent = `Focus on ${level.name} (score ${score} of 30)`;
+      result.querySelector('[data-coe-result-text]')!.textContent = level.text;
+      result.querySelector<HTMLAnchorElement>('[data-coe-result-link]')!.href = href(`/coe/checklist/#${level.id}`);
+      result.hidden = false;
+      result.focus();
+    });
+    form.addEventListener('reset', () => {
+      result.hidden = true;
+    });
+  }
+</script>

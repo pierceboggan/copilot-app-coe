@@ -1,0 +1,39 @@
+---
+import Octicon from '../../components/Octicon.astro';
+import { roles } from '../../data/roles';
+import Base from '../../layouts/Base.astro';
+import { href } from '../../lib/paths';
+---
+<Base title="Use cases by role" description="Copilot app workflows for engineers, product managers and more.">
+  <section class="coe-page-hero">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2" style="color:#d2a8ff">Use cases</p>
+      <h1 class="coe-h1 mb-3">Use cases by role</h1>
+      <p class="coe-lede">
+        Start with the role closest to yours. Every use case includes a prompt you can copy or open directly in the
+        Copilot app.
+      </p>
+    </div>
+  </section>
+  <section class="coe-section">
+    <div class="coe-container coe-grid">
+      {roles.map((role) =>
+        role.available ? (
+          <a class="coe-card" href={href(`/roles/${role.slug}/`)}>
+            <span class="coe-card-icon"><Octicon name={role.icon} size={20} /></span>
+            <h2 class="h3">{role.name}</h2>
+            <p>{role.tagline}</p>
+            <span class="f6 color-fg-accent mt-auto">{role.useCases?.length} use cases →</span>
+          </a>
+        ) : (
+          <div class="coe-card coe-card-disabled">
+            <span class="coe-card-icon"><Octicon name={role.icon} size={20} /></span>
+            <h2 class="h3">{role.name}</h2>
+            <p>{role.tagline}</p>
+            <span class="Label mt-auto" style="align-self:flex-start">Coming soon</span>
+          </div>
+        ),
+      )}
+    </div>
+  </section>
+</Base>
