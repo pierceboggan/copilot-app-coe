@@ -33,6 +33,40 @@ const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
     </div>
   </section>
 
+  <section class="coe-section" aria-labelledby="parallel-work">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2">Run work in parallel</p>
+      <h2 class="coe-h2 mb-2" id="parallel-work">Start the next task while the last one runs</h2>
+      <p class="coe-lede mb-5">
+        Each session gets its own workspace and branch, so a bug fix, a doc update and a spreadsheet analysis can all
+        run at once. You can also ask one session to split a job and start the others for you.
+      </p>
+      <div class="coe-grid">
+        <a class="coe-card" href={href('/parallel/#sessions')}>
+          <span class="coe-card-icon"><Octicon name="git-branch" size={20} /></span>
+          <h3>Several sessions at once</h3>
+          <p>Give each task its own session. Review each one when it finishes, in any order.</p>
+        </a>
+        <a class="coe-card" href={href('/parallel/#spawn')}>
+          <span class="coe-card-icon"><Octicon name="repo-forked" size={20} /></span>
+          <h3>Let the agent split the work</h3>
+          <p>Ask for child sessions, or use <code>/spawn</code> and <code>/fleet</code>. Nested sessions sit under their parent.</p>
+        </a>
+        <a class="coe-card" href={href('/parallel/#orchestrate')}>
+          <span class="coe-card-icon"><Octicon name="repo" size={20} /></span>
+          <h3>Work across repositories</h3>
+          <p>Select several projects or run <code>/orchestrate</code> to coordinate one change with a pull request per repository.</p>
+        </a>
+        <a class="coe-card" href={href('/parallel/#automations')}>
+          <span class="coe-card-icon"><Octicon name="clock" size={20} /></span>
+          <h3>Keep it running on a schedule</h3>
+          <p>Automations wake a session each day or week, so recurring work happens without you starting it.</p>
+        </a>
+      </div>
+      <p class="mt-4"><a href={href('/parallel/')}>Learn when to split work and how to review many results →</a></p>
+    </div>
+  </section>
+
   <section class="coe-section coe-section-muted" aria-labelledby="why-now">
     <div class="coe-container">
       <p class="coe-eyebrow mb-2">Why now</p>

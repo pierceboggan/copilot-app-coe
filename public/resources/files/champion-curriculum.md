@@ -7,7 +7,9 @@ Four 60-minute sessions over two weeks. Each ends with homework that champions b
 - Projects, sessions, locations and modes.
 - Issue to pull request with Plan mode.
 - Parallel sessions in separate working trees.
-- **Homework:** run three sessions on real work and note one thing that surprised you.
+- Letting the agent split work: `/spawn`, `/fleet` and `/orchestrate`, and when not to split.
+- Reviewing several results: one pull request per session, a summary table from the parent.
+- **Homework:** run three sessions on real work at the same time, then ask one session to split a task into child sessions. Note one thing that surprised you.
 
 ## Session 2: Making repositories agent-ready
 

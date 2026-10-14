@@ -22,7 +22,18 @@ A default-on launch gets the app to everyone quickly. Many of them never start a
 
 Copilot usage reports cover activity across surfaces, but they do not map one-to-one to these steps. For Aware and Installed, use your launch survey and device management inventory. To collect your own usage data, the `telemetry` key in [enterprise managed settings](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings) exports OpenTelemetry data to a collector you choose.
 
-{/* TODO: docs.github.com does not yet list Copilot app-specific fields in the usage metrics reference. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+The [Copilot usage metrics reference](https://docs.github.com/en/copilot/reference/copilot-usage-metrics/copilot-usage-metrics) includes Copilot app fields under `totals_by_copilot_app`, such as `session_count`, `prompt_count` and `used_copilot_app`. Use them for Opened, First session and Weekly active.
+
+<h2 id="parallel">Parallel work</h2>
+
+People get more from the app once they run several sessions at a time. [Run work in parallel](/parallel/) teaches the habit. Two signals show whether it's catching on:
+
+| Signal | How to get it |
+| --- | --- |
+| App sessions per active user per week | Sum `totals_by_copilot_app.session_count` per user over seven days in the per-user usage report. A rising median means people start more work in the app. |
+| Share of weekly active users who ran two or more sessions in the same hour | Not in the usage reports. Ask in the [monthly survey](#monthly-pulse-survey), or count from your own OpenTelemetry export if you collect one. |
+
+{/* TODO: The usage metrics reference counts sessions started per day. It does not report how many sessions ran at the same time, or whether app slash commands such as /fleet and /orchestrate are counted in totals_by_slash_cmd. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
 
 ## Outcome metrics
 
@@ -57,6 +68,7 @@ Keep it under two minutes. Download the [survey template](/resources/files/pulse
 4. What stopped you from using it more? (Free text)
 5. Did the app crash, hang or lose work this month? (Yes or no, with details)
 6. Besides code, what did you use it for? (Research, docs, Office files, data analysis, automations, triage, presentations, other)
+7. On a typical day, how many sessions do you have running at the same time? (One, two or three, four or more)
 
 ## ROI worksheet
 

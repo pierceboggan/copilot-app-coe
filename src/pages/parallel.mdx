@@ -1,0 +1,115 @@
+---
+layout: ../layouts/Doc.astro
+title: Run work in parallel
+eyebrow: Core pattern
+description: Run several sessions at once, let an agent start and coordinate more of them, and work across repositories. Plus when to split work and how to review it all.
+---
+import PromptBlock from '../components/PromptBlock.astro';
+import RepoSetting from '../components/RepoSetting.astro';
+
+The biggest change the Copilot app brings is that you stop waiting on one agent. Every session runs in its own isolated workspace with its own branch. So you can start a fix, a refactor and a research question, then review each one as it finishes. Your job shifts from typing to scoping work and reviewing it.
+
+This works for more than code. A PM can triage feedback while a second session drafts a deck. A seller can prepare four account briefs before lunch.
+
+<RepoSetting />
+
+## Ways to run work in parallel
+
+| Pattern | How you start it | Good for |
+| --- | --- | --- |
+| [Several sessions at once](#sessions) | Start a new session for each task | Independent tasks you want to steer one by one |
+| [Ask the agent to start sessions](#spawn) | `/spawn`, or ask in plain language | Handing a side task off without losing your place |
+| [Split one task across agents](#fleet) | `/fleet` after a plan | A plan with parts that don't depend on each other |
+| [Coordinate across repositories](#orchestrate) | `/orchestrate`, or pick several projects for a new chat | Changes that land in more than one repository |
+| [Wake work on a schedule](#automations) | Automations | Recurring work that should be ready when you sit down |
+
+<h2 id="sessions">Several sessions at once</h2>
+
+Start a session, give it a task and start another. Each one gets its own working tree and branch, so they can't overwrite each other's files. Active sessions show in the sidebar, grouped by repository. Click any session to check on it. For heavy work such as large builds or test runs, choose a cloud sandbox as the location so the work runs off your machine. Cloud sandboxes are in public preview.
+
+Mix modes to match the risk. Use **Autopilot** for a well-scoped task and **Plan** for the one you care most about. Keep **Interactive** for the one you want to steer.
+
+<PromptBlock mode="autopilot" prompt="Add missing unit tests for <module>. Do not change production code. Run the tests and report coverage before and after." />
+
+Want a quick answer without leaving the session you're in? A chat has no branch or working tree, so it's a cheap place to ask.
+
+<h2 id="spawn">Ask the agent to start sessions</h2>
+
+You don't have to start every session yourself. Type `/spawn` with a task and the current session creates a focused child session for it. You can also right-click a session in the sidebar and choose **Create nested session**, then describe the task. Nested sessions appear under their parent in the sidebar, connected by hierarchy lines, so you can see what came from where. Chats can start child chats too, each with its own transcript and plan review.
+
+<PromptBlock mode="interactive" prompt="/spawn Write a migration guide for the API change we just made. Put it in docs/migrations/, link it from the changelog and open a separate pull request." />
+
+You can also just ask. The agent can split a request into child sessions and report back as each one finishes.
+
+<PromptBlock mode="plan" prompt="I need three things done at once. Create a separate child session for each: (1) fix the failing date-parsing test, (2) update the README setup section to match the current scripts, (3) find every caller of the deprecated config loader and list them in a new issue. Tell me as each one finishes, and give me a one-line summary and a link for each." />
+
+<h2 id="fleet">Split one task across agents</h2>
+
+`/fleet` takes a single task, usually after you approve a plan, and assigns its independent parts to subagents that run in parallel. The main agent decides what can split based on the dependencies between steps. If the task is strictly sequential, `/fleet` won't speed it up. See [running tasks in parallel with `/fleet`](https://docs.github.com/en/copilot/concepts/agents/copilot-cli/fleet).
+
+<PromptBlock mode="autopilot" prompt="/fleet Implement the approved plan. Run the steps that don't depend on each other in parallel. When everything is done, run the full test suite and summarize what each subagent changed." />
+
+Each subagent talks to the model on its own, so a fleet can use more of your plan's model usage than one agent would. Save it for work that really splits.
+
+<h2 id="orchestrate">Coordinate across repositories</h2>
+
+When a change spans repositories, such as a shared library and the services that use it, select several projects when you start a new chat. The app starts one orchestration chat across those repositories and groups the sessions it spawns together in the sidebar. You can also type `/orchestrate` with a task in any session. It coordinates work across sessions or repositories.
+
+<PromptBlock mode="plan" prompt="/orchestrate Rename the getUserProfile function to fetchUserProfile in <library repo>, release it as a minor version, then update every caller in <service repo A> and <service repo B>. One child session per repository. Do the library first, since the services depend on it. Open one pull request per repository and link them to each other." />
+
+If the coordinator is interrupted, you can resume it and its child sessions from the sidebar.
+
+<h2 id="automations">Wake work on a schedule</h2>
+
+[Automations](https://docs.github.com/en/copilot/how-tos/github-copilot-app/using-automations) run a saved prompt on a schedule or on demand, so the work starts without you. Pair one with the patterns above. A morning automation can triage overnight issues and start a session for each one worth fixing, so drafts are waiting when you log on. Start with read-only reports, and let it open pull requests once you trust its output.
+
+<PromptBlock mode="autopilot" prompt="Every weekday at 7:00, read the issues opened since yesterday in <repo>. Label and deduplicate them. For up to three with a clear, small fix, start a separate session that writes the fix and a test and opens a draft pull request. Post a summary listing each issue, what you did and what needs a human." />
+
+{/* Dynamic workflows (renamed from Agent Factories in github/app v1.1.24) add multi-agent runs on top of these patterns. TODO: no docs.github.com page covers dynamic workflow limits or plan availability yet. Who would know: GitHub, through github/app issues or the docs.github.com feedback link. */}
+
+## When to split work, and when not to
+
+Parallel work is fastest when the pieces don't touch. Before you split, ask if the pieces need each other's results or the same files.
+
+| Split it when | Keep it in one session when |
+| --- | --- |
+| The tasks touch different files or different repositories | Two tasks would edit the same files and conflict at merge |
+| Each piece can be reviewed and merged on its own | Step two needs the output of step one |
+| You can describe "done" for each piece up front | You're still figuring out what the task is |
+| A slow step, such as a build or research, would block the rest | The whole job is small enough to finish in one pass |
+
+When there's an order, say so. "Do the library first, then the services" lets the coordinator run what it can at once and hold back the rest.
+
+## Review many results without drowning
+
+More sessions mean more output to check. These habits keep it manageable.
+
+- **One reviewable unit per session.** Ask each session for its own pull request or file. A single huge change from five agents is harder to review than five small ones.
+- **Ask for a summary table.** Have the coordinator end with one row per child session: what it did, a link and anything it couldn't finish.
+- **Use the sidebar as your queue.** Sessions that need you show it in the sidebar. Answer those first.
+- **Check before you merge.** Run `/review` or the rubber duck agent on each session's changes, and follow the [verify checklist](/verify/).
+- **Let Agent merge shepherd the rest.** Once a pull request looks right, [Agent merge](https://docs.github.com/en/copilot/how-tos/github-copilot-app/managing-issues-and-pull-requests) can address review comments and failing checks until it's ready. Keep an eye on anything with red CI.
+- **Archive as you go.** When you archive a session with nested sessions, the app asks whether to archive those too.
+
+## Parallel work beyond code
+
+| Role | What runs at once | Workflow |
+| --- | --- | --- |
+| Product manager | Feedback triage, a research brief and a review deck | [Fan out a launch review](/roles/product-manager/#pm-fan-out) |
+| Sales | A brief for each account on tomorrow's calendar | [Prepare several account briefs at once](/roles/sales/#sales-parallel-briefs) |
+| DevRel | A blog draft, a sample app and a social thread from one release | [Turn one release into several pieces](/roles/devrel-support/#dr-parallel-content) |
+| Engineer | One change across a library and the services that use it | [Change several repositories together](/roles/engineer/#cross-repo-orchestrate) |
+| Engineering manager | A daily loop from feedback to fix pull requests | [Run a feedback-to-fix coordinator](/roles/engineering-manager/#em-coordinator) |
+
+Every prompt on this page, plus the role examples, is in the [prompt library](/prompts/?feature=Parallel%20sessions).
+
+## Measure it
+
+Track how many app sessions each active user starts per week. The Copilot usage metrics API reports `totals_by_copilot_app.session_count` per user per day. See [measurement](/coe/measurement/#parallel) for how to use it.
+
+## Sources
+
+- [Working with agent sessions](https://docs.github.com/en/copilot/how-tos/github-copilot-app/agent-sessions): isolated workspaces, parallel sessions and cloud sandboxes.
+- [Slash commands for the Copilot app](https://docs.github.com/en/copilot/reference/github-copilot-app-reference/slash-commands): `/spawn`, `/fleet`, `/orchestrate` and `/fork`.
+- [Running tasks in parallel with `/fleet`](https://docs.github.com/en/copilot/concepts/agents/copilot-cli/fleet).
+- Copilot app release notes: [v1.0.16](https://github.com/github/app/releases/tag/v1.0.16) (orchestration chat across several projects, nested sessions from the sidebar), [v1.0.19](https://github.com/github/app/releases/tag/v1.0.19) (Create nested session dialog), [v1.1.26](https://github.com/github/app/releases/tag/v1.1.26) (child chats) and [v1.1.27](https://github.com/github/app/releases/tag/v1.1.27) (resume a coordinator and its child sessions).
