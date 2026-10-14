@@ -461,3 +461,62 @@ a.coe-card:focus-visible {
   font-size: 12px;
   color: var(--fgColor-muted, #59636e);
 }
+
+.coe-hero-result {
+  display: grid;
+  gap: 8px;
+  max-width: 640px;
+  color: #d1d7e0;
+}
+.coe-hero-result li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid #3d444d;
+  border-radius: 6px;
+  background: rgba(1, 4, 9, 0.5);
+}
+.coe-hero-result .octicon {
+  color: #3fb950;
+  flex-shrink: 0;
+}
+.coe-audience {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 1000px;
+}
+.coe-audience-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+  border: 1px solid #3d444d;
+  border-radius: 12px;
+  background: rgba(22, 27, 34, 0.85);
+  color: #f0f6fc;
+}
+.coe-audience-card:hover {
+  text-decoration: none;
+  border-color: #4493f8;
+}
+.coe-audience-card:focus-visible {
+  outline: 2px solid #4493f8;
+  outline-offset: 2px;
+}
+.coe-audience-who {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d2a8ff;
+}
+.coe-audience-what {
+  font-size: 16px;
+  font-weight: 600;
+}
+.coe-audience-go {
+  margin-top: auto;
+  color: #4493f8;
+}

@@ -7,39 +7,61 @@ import Base from '../layouts/Base.astro';
 import { href } from '../lib/paths';
 
 const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
+const engCount = roles.find((r) => r.slug === 'engineer')?.useCases?.length ?? 0;
 ---
 <Base title="Home">
   <section class="coe-hero">
     <div class="coe-container">
-      <p class="coe-eyebrow mb-3">Center of Excellence</p>
+      <p class="coe-eyebrow mb-3">GitHub Copilot app Enablement Center</p>
       <h1 class="coe-display mb-4" style="max-width: 900px">
-        Bring the GitHub Copilot app to your whole organization
+        Accelerate your engineers, for all types of work
       </h1>
       <p class="coe-lede mb-5">
-        Use cases for every role, a rollout checklist and the operating model to run it. Validate in two weeks, then turn
-        it on for everyone.
+        Your engineers hand the app a bug fix, a teammate's review, a flaky test investigation and a design doc, and all
+        four run at the same time. They spend the day scoping work and reviewing results. This site shows your team how
+        to get there.
       </p>
-      <div class="d-flex gap-2 flex-wrap">
-        <a class="btn btn-large btn-primary" href={href('/coe/checklist/')}>
-          <Octicon name="checklist" /> Open the checklist
+      <p id="hero-example" class="f6 mb-2" style="color:#9198a1">One engineer's morning, five sessions in parallel (illustrative example)</p>
+      <ul class="coe-hero-result list-style-none mb-6" aria-labelledby="hero-example">
+        <li><Octicon name="git-pull-request" /> Fix for the checkout bug, pull request open</li>
+        <li><Octicon name="eye" /> Review of a teammate's pull request, comments drafted</li>
+        <li><Octicon name="bug" /> Flaky test traced to a race in the retry logic</li>
+        <li><Octicon name="file" /> Design doc for the cache rewrite, first draft ready</li>
+        <li><Octicon name="project-template" /> Sprint demo deck built from merged work</li>
+      </ul>
+      <h2 class="h4 mb-3" style="color:#f0f6fc">Where do you want to start?</h2>
+      <div class="coe-audience">
+        <a class="coe-audience-card" href={href('/parallel/#try-it')}>
+          <span class="coe-audience-who">Engineers</span>
+          <span class="coe-audience-what">Install the app and run your first parallel prompt</span>
+          <span class="coe-audience-go">Try it in ten minutes →</span>
         </a>
-        <a class="btn btn-large" href={href('/roles/')}>Explore use cases</a>
+        <a class="coe-audience-card" href={href('/resources/#team-kit')}>
+          <span class="coe-audience-who">Team leads</span>
+          <span class="coe-audience-what">Get your team running several sessions at once this week</span>
+          <span class="coe-audience-go">Get the team kit →</span>
+        </a>
+        <a class="coe-audience-card" href={href('/coe/admin-guide/')}>
+          <span class="coe-audience-who">Admins</span>
+          <span class="coe-audience-what">Set up policies, models and MCP servers, then launch</span>
+          <span class="coe-audience-go">Open the admin guide →</span>
+        </a>
       </div>
       <div class="d-flex gap-6 mt-8 flex-wrap">
-        <div><div class="coe-stat">{phases.length}</div><div style="color:#9198a1">rollout phases</div></div>
-        <div><div class="coe-stat">{totalItems}</div><div style="color:#9198a1">checklist items</div></div>
+        <div><div class="coe-stat">{engCount}</div><div style="color:#9198a1">engineer workflows</div></div>
         <div><div class="coe-stat">{useCaseCount}</div><div style="color:#9198a1">ready-to-run prompts</div></div>
+        <div><div class="coe-stat">{totalItems}</div><div style="color:#9198a1">rollout checklist items</div></div>
       </div>
     </div>
   </section>
 
   <section class="coe-section" aria-labelledby="parallel-work">
     <div class="coe-container">
-      <p class="coe-eyebrow mb-2">Run work in parallel</p>
-      <h2 class="coe-h2 mb-2" id="parallel-work">Start the next task while the last one runs</h2>
+      <p class="coe-eyebrow mb-2">How it works</p>
+      <h2 class="coe-h2 mb-2" id="parallel-work">The speed comes from running work in parallel</h2>
       <p class="coe-lede mb-5">
-        Each session gets its own workspace and branch, so a bug fix, a doc update and a spreadsheet analysis can all
-        run at once. You can also ask one session to split a job and start the others for you.
+        Each session gets its own workspace and branch. An engineer starts the next task while the last one runs, then
+        reviews each result when it lands. One session can also split a job and start the others.
       </p>
       <div class="coe-grid">
         <a class="coe-card" href={href('/parallel/#sessions')}>
@@ -60,7 +82,7 @@ const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
         <a class="coe-card" href={href('/parallel/#automations')}>
           <span class="coe-card-icon"><Octicon name="clock" size={20} /></span>
           <h3>Keep it running on a schedule</h3>
-          <p>Automations wake a session each day or week, so recurring work happens without you starting it.</p>
+          <p>Automations wake a session each day or week, so recurring work happens without anyone starting it.</p>
         </a>
       </div>
       <p class="mt-4"><a href={href('/parallel/')}>Learn when to split work and how to review many results →</a></p>
@@ -90,11 +112,12 @@ const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
 
   <section class="coe-section" aria-labelledby="beyond-code">
     <div class="coe-container">
-      <p class="coe-eyebrow mb-2">More than writing code</p>
-      <h2 class="coe-h2 mb-2" id="beyond-code">One app for the work around the code, too</h2>
+      <p class="coe-eyebrow mb-2">All types of work</p>
+      <h2 class="coe-h2 mb-2" id="beyond-code">More than writing code</h2>
       <p class="coe-lede mb-5">
-        Research, docs, Office files, data analysis, automations, triage and presentations. Every role on the team has
-        work the app can take on, with or without a repository.
+        Most of an engineer's week goes to the work around the code. Bug investigations, design docs, triage, incident
+        follow-up and the status update can each run in a session of their own. The same patterns work for the rest of
+        the team.
       </p>
       <div class="coe-grid">
         {beyondCode.map((theme) => (
@@ -172,7 +195,7 @@ const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
   <section class="coe-section">
     <div class="coe-container">
       <p class="coe-eyebrow mb-2">Use cases</p>
-      <h2 class="coe-h2 mb-2">Built for every role on the team</h2>
+      <h2 class="coe-h2 mb-2">Engineers first, then the whole team</h2>
       <p class="coe-lede mb-5">Each role has a day-in-the-life walkthrough and prompts you can open straight in the app.</p>
       <div class="coe-grid">
         {roles.map((role) =>
