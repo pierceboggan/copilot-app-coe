@@ -1,0 +1,61 @@
+---
+layout: ../../layouts/Module.astro
+module: first-month
+title: "Module 4: Your first month"
+description: Teach the agent your team's conventions, schedule work, try more autonomy and help a teammate start.
+---
+import LessonCheck from '../../components/LessonCheck.astro';
+import PromptBlock from '../../components/PromptBlock.astro';
+import RepoSetting from '../../components/RepoSetting.astro';
+
+By now the app is part of your week. This module moves you from using it to shaping it for your team.
+
+<RepoSetting />
+
+<h2 id="instructions">1. Write instructions for your team</h2>
+
+Custom instructions are standing guidance the agent reads in every session. Put team conventions in `.github/copilot-instructions.md` or `AGENTS.md` so they go through code review. Personal preferences go in **Settings → Sessions → App instructions**. The [customizations guide](/coe/customizations/) lists every place instructions can live.
+
+<PromptBlock mode="plan" prompt="Read this repository's README, contributing guide, linters and recent pull request reviews. Draft a short .github/copilot-instructions.md with the conventions a new contributor gets wrong most often. Keep it under 40 lines and cite where each rule comes from." />
+
+<LessonCheck module="first-month" lesson="instructions" />
+
+<h2 id="plugins">2. Install a skill or plugin from your organization</h2>
+
+Click **Customize**, then **Plugins**. If your enterprise manages a plugin marketplace, the **From your organization** tab shows what your CoE provides. Install one plugin or skill and use it on a real task. If nothing is there yet, ask your CoE lead which marketplace to add.
+
+<LessonCheck module="first-month" lesson="plugins" />
+
+<h2 id="schedule">3. Put a recurring chore on a schedule</h2>
+
+Open the automation you saved in week one and change its trigger to **Daily** or **Weekly**. Turn on **Run in the cloud** if it should run while your computer is off. Cloud automations need Copilot cloud agent enabled for the repository. Pick only the tools the task needs.
+
+<PromptBlock mode="autopilot" prompt="Every weekday morning, summarize what merged yesterday, what is blocked in review and which issues were opened. Post it as a comment on the pinned status issue." />
+
+<LessonCheck module="first-month" lesson="schedule" />
+
+<h2 id="cloud">4. Hand a long task to a cloud sandbox</h2>
+
+Cloud sandboxes run the whole session in an isolated environment hosted by GitHub. They are in public preview, and an admin may need to turn them on. Pick a task that takes a while and has good tests, such as a dependency upgrade, and choose the cloud sandbox location when you start the session.
+
+<PromptBlock mode="autopilot" prompt="Upgrade the test framework to its latest major version. Follow the official migration guide, fix every failing test, and open a draft pull request that lists each breaking change you handled." />
+
+<LessonCheck module="first-month" lesson="cloud" />
+
+<h2 id="agent-merge">5. Let Agent merge shepherd a pull request</h2>
+
+When a pull request is close, turn on **agent merge** at the top of the app. The session reads the pull request, fixes what blocks it and merges once GitHub allows. It turns itself off after the merge. Check in if CI stays red after a couple of attempts. The [verify guide](/verify/#ladder) explains where Agent merge sits on the autonomy ladder.
+
+<LessonCheck module="first-month" lesson="agent-merge" />
+
+<h2 id="teach">6. Share one workflow with your team</h2>
+
+Pick the workflow that saved you the most time this month. Demo it at office hours or a team meeting, and add the prompt to your team's library. If it is something the agent should know how to do every time, turn it into a skill.
+
+<PromptBlock mode="interactive" prompt="Write a five-minute demo script for the workflow we used in this session: the problem, the exact prompt, what to show on screen and one pitfall to mention." />
+
+<LessonCheck module="first-month" lesson="teach" />
+
+## What's next
+
+You've finished the learning path. Find more workflows on your [role page](/roles/), browse the [prompt library](/prompts/) or volunteer as a champion through your [Center of Excellence](/coe/).

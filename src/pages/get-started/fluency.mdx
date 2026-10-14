@@ -1,0 +1,59 @@
+---
+layout: ../../layouts/Module.astro
+module: fluency
+title: "Module 2: Copilot app fluency"
+description: "Four habits for working well with agents: Scope, Context, Check and Share."
+---
+import LessonCheck from '../../components/LessonCheck.astro';
+import PromptBlock from '../../components/PromptBlock.astro';
+
+Agents do their best work when you treat them like a capable new teammate. You pick the work, hand over what they need, look at what comes back and teach the team what you learned. We call those four habits **Scope, Context, Check and Share**. Each one maps to controls that exist in the app today.
+
+| Habit | The question to ask | What you use in the app |
+| --- | --- | --- |
+| **Scope** | Is this the right task, at the right size, with the right amount of autonomy? | Session mode, location, model and reasoning effort |
+| **Context** | Does the agent have what a new teammate would need? | Issues from My work, `#` and `@` references, attachments, instructions, skills |
+| **Check** | How will I know the result is right? | Diffs, tests, the integrated browser, `/security-review`, the rubber duck agent, CI |
+| **Share** | Who else should get this for free next time? | Prompts, skills, plugins, automations and repository configuration |
+
+<h2 id="scope">1. Scope the task</h2>
+
+Good scope is one outcome you could describe in a sentence and check in a few minutes. "Add tests for the date parser" scopes well. "Clean up the codebase" doesn't.
+
+Match autonomy to risk. Use **Plan** mode when the change touches something you care about, **Interactive** when you want to steer as it goes and **Autopilot** for well-understood work with good tests. Pick the location too. A new working tree keeps parallel work apart, and a cloud sandbox keeps a long job off your machine. Split big work into separate sessions you can review one at a time.
+
+<PromptBlock mode="plan" prompt="Before you start, restate the goal of this task in one sentence, list what is out of scope, and tell me how we will know it is done. If the task is too big for one pull request, propose how to split it." />
+
+<LessonCheck module="fluency" lesson="scope" />
+
+<h2 id="context">2. Give it context</h2>
+
+The agent can read your code, but it can't read your mind. Start sessions from the issue in **My work** so the issue text comes along. Reference other issues with `#` and files with `@`. Attach the screenshot, CSV or notes you would hand a person.
+
+Context that you repeat belongs in a file. Put conventions and test commands in custom instructions, setup steps in `.github/github-app.yml` and repeatable procedures in a skill. The [customizations guide](/coe/customizations/) covers where each one lives.
+
+<PromptBlock mode="interactive" prompt="Before you change anything, tell me which files, docs and conventions you are relying on for this task, and ask me about anything you had to guess." />
+
+<LessonCheck module="fluency" lesson="context" />
+
+<h2 id="check">3. Check the work</h2>
+
+You own what you merge. Read the diff. Run the tests or ask the agent to show you the run. For UI changes, look at the result in the integrated browser. Ask for a second opinion from the rubber duck agent, and run `/security-review` before you open the pull request.
+
+Decide how you will check before the agent starts. Then the check is a quick yes or no instead of a long read. The [verify the agent's work](/verify/) guide has a checklist and an autonomy ladder.
+
+<PromptBlock mode="interactive" prompt="Summarize what you changed and why, list every command you ran with its result, and point out anything you were unsure about or did not test." />
+
+<LessonCheck module="fluency" lesson="check" />
+
+<h2 id="share">4. Share what worked</h2>
+
+A prompt that worked once is a team asset. Save it to your team's prompt library, or turn it into a skill so the agent loads it on its own. If you run the same prompt every week, make it an automation. If every repository needs it, ask your CoE to ship it as a plugin.
+
+<PromptBlock mode="interactive" prompt="Look back at this session. Write the prompt I should have used from the start, and draft a SKILL.md that would let a teammate get the same result next time." />
+
+<LessonCheck module="fluency" lesson="share" />
+
+## Practice
+
+Pick one prompt from the [prompt library](/prompts/) for your role. Run it once and write down which habit made the biggest difference. Bring it to office hours.

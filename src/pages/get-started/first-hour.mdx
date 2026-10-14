@@ -1,15 +1,16 @@
 ---
-layout: ../layouts/Doc.astro
-title: Get started with the Copilot app
-eyebrow: Get started
-description: Learn the core ideas, then finish a real task in your first hour.
+layout: ../../layouts/Module.astro
+module: first-hour
+title: "Module 1: Your first hour"
+description: Install the app, learn the core ideas and take one real issue to a pull request.
 ---
-import PromptBlock from '../components/PromptBlock.astro';
-import RepoSetting from '../components/RepoSetting.astro';
+import LessonCheck from '../../components/LessonCheck.astro';
+import PromptBlock from '../../components/PromptBlock.astro';
+import RepoSetting from '../../components/RepoSetting.astro';
 
-The GitHub Copilot app is a desktop app for agent-driven development. You run several agent sessions at once, each isolated on its own branch, and take work from an issue to a merged pull request without switching tools.
+The GitHub Copilot app is a desktop app for agent-driven development. You run several agent sessions at once, each isolated on its own branch, and take work from an issue to a merged pull request without switching tools. You can also use it with no repository at all, for documents, data and research.
 
-## Core ideas
+<h2 id="core-ideas">1. Learn the core ideas (5 minutes)</h2>
 
 | Concept | What it means |
 | --- | --- |
@@ -22,9 +23,9 @@ The GitHub Copilot app is a desktop app for agent-driven development. You run se
 | **Automations** | Saved prompts that run on a schedule, on an event or on demand, locally or in the cloud. |
 | **Canvases** | Shared, agent-driven artifacts and interfaces that you and the agent work on together. |
 
-## Your first hour
+<LessonCheck module="first-hour" lesson="core-ideas" />
 
-### 1. Install and sign in (10 minutes)
+<h2 id="install">2. Install and sign in (10 minutes)</h2>
 
 Follow the [Copilot app documentation](https://docs.github.com/en/copilot/how-tos/github-copilot-app) to install the app, then sign in with the GitHub account that has your Copilot seat.
 
@@ -34,11 +35,21 @@ Follow the [Copilot app documentation](https://docs.github.com/en/copilot/how-to
 | GitHub Enterprise Cloud with data residency (GHE.com) | Choose **Use GitHub Enterprise** and enter your `*.ghe.com` hostname. |
 | GitHub Enterprise Server | Not supported today, per the [quickstart](https://docs.github.com/en/copilot/get-started/quickstart-copilot-app). Check with your account team before you plan a rollout. |
 
-### 2. Add a project (5 minutes)
+<LessonCheck module="first-hour" lesson="install" />
+
+<h2 id="project">3. Add a project (5 minutes)</h2>
 
 In the sidebar, click **+** next to **Projects** and choose a repository you know well. A repository with tests works best for a first try.
 
-### 3. Run a Plan mode session (30 minutes)
+No repository? Start a chat instead, attach a CSV or your notes and ask for a result:
+
+<PromptBlock mode="interactive" prompt="Open the attached CSV in an Excel canvas. Add a summary row, a pivot by category and a chart of the top five values. Explain each formula you add." />
+
+The [business and operations](/roles/business-ops/) role page has more workflows like this.
+
+<LessonCheck module="first-hour" lesson="project" />
+
+<h2 id="plan-session">4. Run a Plan mode session (30 minutes)</h2>
 
 Pick a small, real issue. Open **My work**, select the issue and click **New session**. Choose **Plan** mode and use this prompt:
 
@@ -48,46 +59,18 @@ Pick a small, real issue. Open **My work**, select the issue and click **New ses
 
 Read the plan carefully. Ask for changes if anything is off, then approve it. Watch the agent work, and steer it in the conversation when needed.
 
-### 4. Review and open the pull request (15 minutes)
+<LessonCheck module="first-hour" lesson="plan-session" />
+
+<h2 id="review-pr">5. Review and open the pull request (15 minutes)</h2>
 
 Review the diff in the session. Before you open the pull request, run a quick security check:
 
 <PromptBlock mode="interactive" prompt="/security-review" />
 
-Then ask the agent to open the pull request. It follows your repository's pull request template.
+Then ask the agent to open the pull request. It follows your repository's pull request template. The [verify the agent's work](/verify/) guide has a fuller review checklist.
 
-## No repository? Start with a chat
+<LessonCheck module="first-hour" lesson="review-pr" />
 
-You can use the app without code. Start a chat, attach a CSV or your notes and ask for a result:
+## Before the next module
 
-<PromptBlock mode="interactive" prompt="Open the attached CSV in an Excel canvas. Add a summary row, a pivot by category and a chart of the top five values. Explain each formula you add." />
-
-The [business and operations](/roles/business-ops/) role page has more workflows like this, and the [starter prompt library](/resources/#starter-prompts) has one prompt for each canvas.
-
-## Make your repository agent-ready
-
-Add `.github/github-app.yml` so every new session starts with dependencies installed and knows how to run your project:
-
-```yaml
-instructions: |
-  Use pnpm. Run `pnpm test` before proposing a pull request.
-
-scripts:
-  - name: Setup
-    command: pnpm install
-    triggers:
-      - session.create
-  - name: Run
-    command: pnpm dev
-
-server_ready_pattern: '(?i)Local:\s+(https?://\S+)'
-```
-
-The app asks you to review and accept the file before it applies it. Scripts run with GitHub credentials, so read every command first. See [repository configuration](https://docs.github.com/en/copilot/reference/github-copilot-app-reference/repository-configuration) for every option.
-
-## Next steps
-
-- Find workflows for your job in [use cases by role](/roles/).
-- Not sure whether to use the app, the CLI or your editor? Read [which tool when](/which-tool/).
-- Grab more prompts from the [starter prompt library](/resources/#starter-prompts).
-- If you lead adoption, start with the [Center of Excellence](/coe/), take the [maturity assessment](/coe/assessment/) and open the [rollout checklist](/coe/checklist/).
+You finished a real task. Next, spend 20 minutes on [Copilot app fluency](/get-started/fluency/), four habits that make every later session go better.

@@ -1,0 +1,84 @@
+---
+layout: ../../layouts/Module.astro
+module: first-week
+title: "Module 3: Your first week"
+description: Run sessions in parallel, try a canvas, make your repository agent-ready and save your first automation.
+---
+import LessonCheck from '../../components/LessonCheck.astro';
+import PromptBlock from '../../components/PromptBlock.astro';
+import RepoSetting from '../../components/RepoSetting.astro';
+
+Do one lesson a day. Each one adds a habit you will use for the rest of the rollout. Use real work where you can, and test data where you can't.
+
+<RepoSetting />
+
+<h2 id="parallel">1. Run two sessions in parallel</h2>
+
+Keep one session open. Click **+** next to **Sessions** and start a second session in the same repository, in a new working tree. Give it an independent task. Switch between the two in the sidebar and review each one on its own. Each session gets its own branch and its own pull request.
+
+<PromptBlock mode="autopilot" prompt="Add missing unit tests for the module I am about to name. Do not change production code. Run the tests and report coverage before and after." />
+
+<LessonCheck module="first-week" lesson="parallel" />
+
+<h2 id="canvas">2. Work in a canvas without a repository</h2>
+
+Start a chat, which has no branch or working tree. Attach a test CSV or a page of notes and ask for a result in a canvas. Canvases are shared artifacts that you and the agent edit together. Find the canvases you have under **Canvas** in **Customize**. If the Office canvases aren't there for your account yet, ask the agent to write the file with a script instead.
+
+<PromptBlock mode="interactive" prompt="Turn the attached notes into a one-page brief in a Word canvas with a summary, three decisions we need and open questions. Then build a five-slide PowerPoint outline from the same brief." />
+
+The [starter prompt library](/resources/#starter-prompts) has one prompt for each canvas.
+
+<LessonCheck module="first-week" lesson="canvas" />
+
+<h2 id="review-loop">3. Fix review comments and failing checks</h2>
+
+Open **My work** and find one of your pull requests with review comments or a red check. Start a session from it, so the pull request context comes along.
+
+<PromptBlock mode="interactive" prompt="Read the open review comments and the failing checks on this pull request. For each one, tell me what you will change, make the change, run the relevant tests and reply to the comment with a short summary." />
+
+<LessonCheck module="first-week" lesson="review-loop" />
+
+<h2 id="repo-config">4. Make your repository agent-ready</h2>
+
+Add `.github/github-app.yml` so every new session starts with dependencies installed and knows how to run your project:
+
+```yaml
+instructions: |
+  Use pnpm. Run `pnpm test` before proposing a pull request.
+
+scripts:
+  - name: Setup
+    command: pnpm install
+    triggers:
+      - session.create
+  - name: Run
+    command: pnpm dev
+
+server_ready_pattern: '(?i)Local:\s+(https?://\S+)'
+```
+
+The app asks you to review and accept the file before it applies it. Scripts run with GitHub credentials, so read every command first. See [repository configuration](https://docs.github.com/en/copilot/reference/github-copilot-app-reference/repository-configuration) for every option.
+
+<PromptBlock mode="plan" prompt="Look at how this repository installs dependencies, runs tests and starts a dev server. Propose a .github/github-app.yml with setup and run scripts and short instructions. Explain each line and do not include secrets." />
+
+<LessonCheck module="first-week" lesson="repo-config" />
+
+<h2 id="second-opinion">5. Get a second opinion before you merge</h2>
+
+The rubber duck agent reviews your plan, code or tests on a different model and returns concrete feedback. Ask for it on your next real change, then run a security check.
+
+<PromptBlock mode="interactive" prompt="/rubber-duck Critique the current implementation and tests. List the three riskiest assumptions and what would prove each one wrong." />
+
+<PromptBlock mode="interactive" prompt="/security-review" />
+
+<LessonCheck module="first-week" lesson="second-opinion" />
+
+<h2 id="automation">6. Save your first automation</h2>
+
+Open **Automations** in the sidebar and click **New automation**. Choose the **Manual** trigger for now, write the prompt, pick the project and click **Create and run**. Next month you will put it on a schedule.
+
+<PromptBlock mode="autopilot" prompt="List my open pull requests in this repository. For each one, show review status, failing checks and how long it has waited. Suggest the one I should unblock first." />
+
+See [using automations](https://docs.github.com/en/copilot/how-tos/github-copilot-app/using-automations) for triggers and cloud options.
+
+<LessonCheck module="first-week" lesson="automation" />
