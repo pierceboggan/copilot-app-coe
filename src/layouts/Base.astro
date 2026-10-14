@@ -16,6 +16,7 @@ const nav = [
   { label: 'Learn', path: '/get-started/' },
   { label: 'Use cases', path: '/roles/' },
   { label: 'Prompts', path: '/prompts/' },
+  { label: 'Parallel work', path: '/parallel/' },
   { label: 'Center of Excellence', path: '/coe/' },
   { label: 'Checklist', path: '/coe/checklist/' },
   { label: 'Resources', path: '/resources/' },
@@ -77,6 +78,7 @@ const isCurrent = (p: string) =>
           <span>Copilot app Enablement Center. A community resource, not official GitHub documentation.</span>
         </div>
         <nav class="d-flex gap-3 flex-wrap" aria-label="Footer">
+          <a href={href('/parallel/')}>Run work in parallel</a>
           <a href={href('/coe/admin-guide/')}>Admin guide</a>
           <a href={href('/verify/')}>Verify the agent's work</a>
           <a href={href('/coe/metrics/')}>Start from the metric</a>

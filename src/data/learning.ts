@@ -49,9 +49,10 @@ export const modules: LearningModule[] = [
     path: '/get-started/first-week/',
     icon: 'milestone',
     time: '15 to 30 minutes a day',
-    summary: 'Run sessions in parallel, try a canvas, make your repository agent-ready and save your first automation.',
+    summary: 'Run sessions in parallel, let the agent split work, try a canvas, make your repository agent-ready and save your first automation.',
     lessons: [
       { id: 'parallel', title: 'Run two sessions in parallel' },
+      { id: 'delegate', title: 'Ask the agent to split the work' },
       { id: 'canvas', title: 'Work in a canvas without a repository' },
       { id: 'review-loop', title: 'Fix review comments and failing checks' },
       { id: 'repo-config', title: 'Make your repository agent-ready' },

@@ -20,7 +20,8 @@ export type Feature =
   // "Agent merge" matches docs.github.com/en/copilot/how-tos/github-copilot-app/managing-issues-and-pull-requests.
   // "Child sessions", "Dynamic workflows", "Connectors" and the Word, Excel and PowerPoint canvases are named in the
   // public release notes at github.com/github/app/releases.
-  // TODO: no docs.github.com page covers child sessions or dynamic workflows yet. Who would know: GitHub, through github/app issues or the docs.github.com feedback link.
+  // "Child sessions": /spawn and /orchestrate are in docs.github.com/en/copilot/reference/github-copilot-app-reference/slash-commands.
+  // TODO: no docs.github.com page covers dynamic workflows yet. Who would know: GitHub, through github/app issues or the docs.github.com feedback link.
   | 'Agent merge'
   | 'Child sessions'
   | 'Connectors'
@@ -205,6 +206,39 @@ export const roles: Role[] = [
         features: ['Automations', 'Cloud sandbox'],
       },
       {
+        id: 'cross-repo-orchestrate',
+        title: 'Change several repositories together',
+        summary: 'One orchestration chat runs a child session per repository and keeps the order right.',
+        mode: 'plan',
+        prompt:
+          '/orchestrate Rename getUserProfile to fetchUserProfile in <library repo> and release it as a minor version. Then update every caller in <service repo A> and <service repo B>. Use one child session per repository. Finish the library first, since the services depend on it. Open one pull request per repository, link them to each other and give me a table with each pull request and its CI status.',
+        outcome: 'Linked pull requests across repositories, made in the right order, with one table to review them from.',
+        // Verified: /orchestrate is in docs.github.com/en/copilot/reference/github-copilot-app-reference/slash-commands.
+        // Selecting several projects for a new chat starts an orchestration chat (github/app v1.0.16).
+        features: ['Child sessions', 'Parallel sessions', 'Plan mode'],
+        steps: [
+          'Add each repository as a project first.',
+          'Start a new chat with all of the projects selected, or type /orchestrate in any session.',
+          'Review the plan, especially the order, before you approve it.',
+        ],
+      },
+      {
+        id: 'fleet-plan',
+        title: 'Split an approved plan across agents',
+        summary: 'Use /fleet so the independent steps of a plan run in parallel.',
+        mode: 'autopilot',
+        prompt:
+          '/fleet Implement the approved plan. Run the steps that do not depend on each other in parallel and keep the dependent ones in order. When everything is done, run the full test suite and summarize what each subagent changed.',
+        outcome: 'A multi-part plan done faster, with a per-subagent summary to review.',
+        // Verified: docs.github.com/en/copilot/concepts/agents/copilot-cli/fleet and the app slash-commands reference.
+        features: ['Parallel sessions', 'Autopilot mode', 'Plan mode'],
+        steps: [
+          'Start in Plan mode and approve a plan with clear, separate steps.',
+          'Use /fleet only when steps really are independent. A sequential task gains nothing.',
+          'Each subagent uses the model on its own, so a fleet can use more of your plan than a single agent.',
+        ],
+      },
+      {
         id: 'agent-merge',
         title: 'Shepherd a pull request with agent merge',
         summary: 'Agent merge addresses review comments, fixes failing checks and resolves conflicts while you start the next task.',
@@ -227,6 +261,7 @@ export const roles: Role[] = [
       'Check in when CI fails twice on the same check. Agents can loop on a red build, so read the failure yourself and give a concrete hint or take over.',
       'Accept a repository configuration only after reading every script it runs.',
       'Keep one task per session. Long, wandering sessions are harder to review.',
+      'Don\'t split work that touches the same files. Two parallel sessions editing one module will conflict at merge, so keep those in one session or run them in order.',
     ],
   },
   {
@@ -237,7 +272,7 @@ export const roles: Role[] = [
     available: true,
     dayInTheLife: [
       { time: '8:30', text: 'Your daily triage automation has labeled and summarized overnight issues.' },
-      { time: '10:00', text: 'In a Chat, you turn customer interview notes into a one-page spec.' },
+      { time: '10:00', text: 'In a Chat, you turn customer interview notes into a one-page spec. Two child chats sort the week\'s feedback and research the problem space while you write.' },
       { time: '11:00', text: 'You start a Plan mode session to prototype the UI change and preview it in the integrated browser.' },
       { time: '15:00', text: 'The prototype link goes into the spec so engineers can react to something real.' },
       { time: '17:00', text: 'A weekly automation drafts the status update from merged PRs and closed issues.' },
@@ -306,6 +341,22 @@ export const roles: Role[] = [
         steps: [
           'Run it as a weekly automation once the output is useful. Give the automation only the tools it needs.',
           'Pair it with the daily issue triage automation, which handles labels and duplicates on new issues.',
+        ],
+      },
+      {
+        id: 'pm-fan-out',
+        title: 'Fan out a launch review',
+        summary: 'Ask for feedback triage, a research brief and a review deck at the same time, each in its own child chat.',
+        mode: 'plan',
+        prompt:
+          'I have a launch review on Friday. Start three child chats that run at the same time. (1) Triage the attached feedback export into themes with counts and the top five issues. (2) Research how teams in our space describe <problem>, with cited sources. (3) Draft a six-slide review deck outline. When the first two finish, fold their findings into the deck and show me one summary with links to all three.',
+        outcome: 'Triage, research and a deck draft ready together, instead of one after another.',
+        // Verified: chats can start child chats (github/app v1.1.26); /spawn is in the app slash-commands reference.
+        features: ['Chats', 'Child sessions', 'Parallel sessions', 'Office canvases'],
+        steps: [
+          'Start from a chat, since none of this needs a repository.',
+          'Use test or anonymized feedback until your data handling is approved.',
+          'Review each child chat on its own before the deck pulls from it.',
         ],
       },
       {
@@ -615,7 +666,7 @@ export const roles: Role[] = [
     tagline: 'Prepare for accounts, build sales presentations and hear what customers are saying, without digging through tools.',
     available: true,
     dayInTheLife: [
-      { time: '8:30', text: 'A morning automation lists today\'s meetings with a short brief on each account and its open opportunities.' },
+      { time: '8:30', text: 'A morning automation lists today\'s meetings. You ask for one child session per account, and the briefs are ready together.' },
       { time: '10:00', text: 'Before a renewal call, you ask for the account\'s recent feedback and support history in one summary.' },
       { time: '13:00', text: 'You turn the discovery notes into a tailored PowerPoint deck and review it with the agent.' },
       { time: '15:30', text: 'You review the pipeline for the quarter and get a list of deals with no next step.' },
@@ -636,6 +687,21 @@ export const roles: Role[] = [
         steps: [
           'Prerequisite: an admin-approved Salesforce connector or MCP server, authorized with your own account and read-only scope.',
           'Without a connector, export the account or opportunity report to CSV and attach it.',
+        ],
+      },
+      {
+        id: 'sales-parallel-briefs',
+        title: 'Prepare several account briefs at once',
+        summary: 'One child session per meeting on tomorrow\'s calendar, each producing a brief.',
+        mode: 'interactive',
+        prompt:
+          'I have meetings tomorrow with <account A>, <account B>, <account C> and <account D>. Start one child session per account and run them at the same time. Each one writes a one-page brief: open opportunities, recent activity, key contacts by role and risks, from the attached exports or the connected CRM. Do not change any records. When all four are done, give me a table with each account, its biggest risk and a link to its brief.',
+        outcome: 'A stack of meeting-ready briefs in the time one used to take.',
+        // Same CRM connector TODO as sales-account-brief. Attached CSV exports work today.
+        features: ['Chats', 'Child sessions', 'Parallel sessions', 'Connectors'],
+        steps: [
+          'Prerequisite: an admin-approved CRM connector or MCP server with read-only scope, or one CSV export per account.',
+          'Check each brief against the record before the meeting.',
         ],
       },
       {
@@ -826,6 +892,17 @@ export const roles: Role[] = [
         outcome: 'A draft post and a runnable sample that back each other up.',
         features: ['Plan mode', 'Canvases'],
         steps: ['Open the draft in an editor canvas to edit it together with the agent before review.'],
+      },
+      {
+        id: 'dr-parallel-content',
+        title: 'Turn one release into several pieces at once',
+        summary: 'Draft the blog post, build the sample and write the social thread in parallel sessions.',
+        mode: 'plan',
+        prompt:
+          'Read the release notes for <version>. Create three child sessions that run at the same time. (1) Build and run a sample in samples/<slug> that shows the headline feature. (2) Draft a blog post that pulls every snippet from that sample once it passes. (3) Write a five-post social thread with alt text for any images. Open one pull request for the sample and the post, and put the thread in a Markdown file for me to review.',
+        outcome: 'A tested sample, a post and a social thread for one release, ready for review together.',
+        features: ['Child sessions', 'Parallel sessions', 'Plan mode'],
+        steps: ['The blog session depends on the sample, so ask it to wait for the sample to pass before pulling snippets.'],
       },
       {
         id: 'dr-video',
