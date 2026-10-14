@@ -25,6 +25,11 @@ Send on the first business day of each month. Keep it anonymous and under two mi
 
 7. Besides code, what did you use it for? (Select all: research, docs, Office files, data analysis, automations, triage, presentations, other)
 
-8. What is your role? (Engineer, PM, designer, marketing, sales, business or operations, manager, DevRel or support, security or admin, other)
+8. On a typical day, how many sessions do you have running at the same time?
+   - One
+   - Two or three
+   - Four or more
+
+9. What is your role? (Engineer, PM, designer, marketing, sales, business or operations, manager, DevRel or support, security or admin, other)
 
 Report results by team and role, never by individual.

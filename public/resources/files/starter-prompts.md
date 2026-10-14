@@ -24,6 +24,14 @@ Concrete prompts new users can run on day one. Replace anything in angle bracket
 
 **Terminal canvas.** Open a terminal canvas and run the test suite in watch mode so I can see failures as you fix them.
 
+## Parallel work
+
+**Plan mode.** Split this into separate child sessions that run at the same time: (1) <first task>, (2) <second task>, (3) <third task>. Tell me as each one finishes, with a one-line summary and a link.
+
+**Autopilot mode, after a plan.** /fleet Implement the approved plan. Run independent steps in parallel and summarize what each subagent changed.
+
+**Plan mode, several repositories.** /orchestrate Make <change> in <repo A> first, then update <repo B> and <repo C>. One child session per repository, one pull request each.
+
 ## Daily habits
 
 **Automation, daily.** Review issues opened in the last 24 hours. Suggest a label for each, flag likely duplicates with links and list any missing reproduction steps.

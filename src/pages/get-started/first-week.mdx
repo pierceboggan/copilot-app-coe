@@ -2,7 +2,7 @@
 layout: ../../layouts/Module.astro
 module: first-week
 title: "Module 3: Your first week"
-description: Run sessions in parallel, try a canvas, make your repository agent-ready and save your first automation.
+description: Run sessions in parallel, let the agent split work, try a canvas, make your repository agent-ready and save your first automation.
 ---
 import LessonCheck from '../../components/LessonCheck.astro';
 import PromptBlock from '../../components/PromptBlock.astro';
@@ -20,7 +20,15 @@ Keep one session open. Click **+** next to **Sessions** and start a second sessi
 
 <LessonCheck module="first-week" lesson="parallel" />
 
-<h2 id="canvas">2. Work in a canvas without a repository</h2>
+<h2 id="delegate">2. Ask the agent to split the work</h2>
+
+Now let the agent start sessions for you. Pick a job with two or three parts that don't touch the same files. Ask for one child session per part, or type `/spawn` with a single side task. Nested sessions show up under their parent in the sidebar. Review each one on its own, then ask the parent for a summary. [Run work in parallel](/parallel/) covers `/fleet`, `/orchestrate` and when not to split.
+
+<PromptBlock mode="plan" prompt="Split this into separate child sessions that run at the same time: (1) <first task>, (2) <second task>, (3) <third task>. Tell me as each one finishes, with a one-line summary and a link." />
+
+<LessonCheck module="first-week" lesson="delegate" />
+
+<h2 id="canvas">3. Work in a canvas without a repository</h2>
 
 Start a chat, which has no branch or working tree. Attach a test CSV or a page of notes and ask for a result in a canvas. Canvases are shared artifacts that you and the agent edit together. Find the canvases you have under **Canvas** in **Customize**. If the Office canvases aren't there for your account yet, ask the agent to write the file with a script instead.
 
@@ -30,7 +38,7 @@ The [starter prompt library](/resources/#starter-prompts) has one prompt for eac
 
 <LessonCheck module="first-week" lesson="canvas" />
 
-<h2 id="review-loop">3. Fix review comments and failing checks</h2>
+<h2 id="review-loop">4. Fix review comments and failing checks</h2>
 
 Open **My work** and find one of your pull requests with review comments or a red check. Start a session from it, so the pull request context comes along.
 
@@ -38,7 +46,7 @@ Open **My work** and find one of your pull requests with review comments or a re
 
 <LessonCheck module="first-week" lesson="review-loop" />
 
-<h2 id="repo-config">4. Make your repository agent-ready</h2>
+<h2 id="repo-config">5. Make your repository agent-ready</h2>
 
 Add `.github/github-app.yml` so every new session starts with dependencies installed and knows how to run your project:
 
@@ -63,7 +71,7 @@ The app asks you to review and accept the file before it applies it. Scripts run
 
 <LessonCheck module="first-week" lesson="repo-config" />
 
-<h2 id="second-opinion">5. Get a second opinion before you merge</h2>
+<h2 id="second-opinion">6. Get a second opinion before you merge</h2>
 
 The rubber duck agent reviews your plan, code or tests on a different model and returns concrete feedback. Ask for it on your next real change, then run a security check.
 
@@ -73,7 +81,7 @@ The rubber duck agent reviews your plan, code or tests on a different model and 
 
 <LessonCheck module="first-week" lesson="second-opinion" />
 
-<h2 id="automation">6. Save your first automation</h2>
+<h2 id="automation">7. Save your first automation</h2>
 
 Open **Automations** in the sidebar and click **New automation**. Choose the **Manual** trigger for now, write the prompt, pick the project and click **Create and run**. Next month you will put it on a schedule.
 

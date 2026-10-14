@@ -5,8 +5,8 @@
 | Time | Segment |
 | --- | --- |
 | 0:00 | Why this matters to our team, in one slide |
-| 0:05 | Demo 1: issue to pull request in Plan mode |
-| 0:15 | Demo 2: a non-code workflow, such as a CSV analysis in an Excel canvas |
+| 0:05 | Demo 1: start three sessions at once (a fix, a doc update and a CSV analysis), then review each as it finishes |
+| 0:15 | Demo 2: ask one session to split a job into child sessions and summarize the results |
 | 0:25 | Everyone runs a starter prompt on their own machine |
 | 0:40 | Questions, and where to get help |
 

@@ -10,7 +10,7 @@ Many people with a Copilot seat do not know the Copilot app exists. These templa
 
 Hi everyone,
 
-You can now use the GitHub Copilot app, a desktop app that runs several Copilot agent sessions at once. Each session works on its own branch, so you can fix a bug, review a pull request and prototype an idea at the same time.
+You can now use the GitHub Copilot app, a desktop app that runs several Copilot agent sessions at once. Each session works on its own branch, so you can fix a bug, review a pull request and prototype an idea at the same time. You can even ask one session to split a job into child sessions and report back.
 
 It uses the Copilot seat you already have, and it is turned on for everyone in <organization> today. It isn't only for code. People here use it to research a topic, analyze a spreadsheet, draft a deck and triage feedback, too.
 
@@ -49,6 +49,7 @@ Post one a week. Each is short enough to run in a few minutes.
 - **Tuesday, everyone:** Attach a CSV and ask: "Open this in an Excel canvas, add a summary row and chart the top five values."
 - **Wednesday, PMs:** "Summarize issues labeled feedback from the last 30 days into themes with counts."
 - **Thursday, leads:** "Draft my weekly status from merged PRs and closed issues. Keep it under 200 words."
+- **Thursday, everyone:** Start three sessions before your first meeting. Give each a small, separate task and review them after.
 - **Friday, everyone:** Run `/security-review` on your in-progress branch before you leave.
 
 ---
