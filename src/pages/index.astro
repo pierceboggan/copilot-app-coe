@@ -139,7 +139,7 @@ const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
         {phases.map((phase, i) => (
           <li class="coe-card">
             <span class="Label Label--done" style="align-self:flex-start">Phase {i + 1} · {phase.timeframe}</span>
-            <h3>{phase.name}</h3>
+            <h3>{phase.nickname} <span class="color-fg-muted text-normal f5">({phase.name})</span></h3>
             <p>{phase.goal}</p>
             <a class="f6 mt-auto" href={href(`/coe/checklist/#${phase.id}`)}>{phase.items.length} checklist items →</a>
           </li>

@@ -4,6 +4,7 @@ title: Measurement
 eyebrow: Center of Excellence
 description: The funnel, outcome metrics, survey and ROI worksheet for proving the program works.
 ---
+import RoiCalculator from '../../components/RoiCalculator.astro';
 
 Capture a baseline on day 1 of the validation sprint. With a fast org-wide launch, watch the funnel daily during launch week, then weekly. Report trends rather than single numbers.
 
@@ -42,6 +43,8 @@ Copilot usage reports cover activity across surfaces, but they do not map one-to
 | Reliability | Crashes and hangs reported per week | Feedback channel and office hours notes |
 | Sentiment | "The app saves me time" score, 1 to 5 | Monthly survey below |
 
+Not sure which outcome to lead with? [Start from the metric](/coe/metrics/) lists the use cases that move each one.
+
 Measure teams, not individuals. Agent activity is a poor proxy for anyone's performance.
 
 ## Monthly pulse survey
@@ -67,3 +70,34 @@ The [ROI worksheet](/resources/files/roi-worksheet.csv) multiplies hours saved p
 | Seats and other costs per month | Your contract | Procurement |
 
 Show the result as a range. Use the survey's 25th and 75th percentile for hours saved.
+
+### Try it
+
+Change any number. The defaults match the worked example below.
+
+<RoiCalculator />
+
+### Worked example
+
+These numbers are made up to show the math. Replace every one with your own.
+
+A team has 120 weekly active users. The pulse survey's 25th percentile is 1 hour saved per week and the 75th is 2 hours. Finance gives a loaded cost of $90 an hour, and the program costs $10,000 a month.
+
+1. Hours saved per month: 120 × 1 × 4.33 = about 520 hours, up to 120 × 2 × 4.33 = about 1,039 hours.
+2. Value per month: 520 × $90 = $46,764, up to 1,039 × $90 = $93,528.
+3. Net after cost: $36,764 to $83,528 a month.
+4. Return per dollar: about 4.7x to 9.4x.
+
+Report it as "between 4.7x and 9.4x, based on our own survey", and say where each input came from. Time saved is not money saved unless the time goes to other work, so pair this with a delivery metric such as PR cycle time.
+
+GitHub's Copilot impact dashboard also has a **potential return on investment** section that compares cost and pull request output across adoption cohorts. Use it alongside this worksheet. See [Copilot usage metrics](https://docs.github.com/en/copilot/concepts/copilot-usage-metrics/copilot-metrics).
+
+## GitHub's own adoption and measurement resources
+
+- [Rolling out GitHub Copilot at scale](https://docs.github.com/en/copilot/tutorials/roll-out-at-scale): GitHub's tutorials for planning a rollout, driving adoption and measuring results.
+- [Driving Copilot adoption in your company](https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/enable-developers/drive-adoption): a launch timeline and enablement plan.
+- [Rolling out the Copilot app to your team](https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/enable-developers/copilot-app-for-teams): policies, models, MCP servers and a first pilot task.
+- [Measuring the success of a Copilot trial](https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/measure-success) and [measuring the impact of Copilot](https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/measure-copilot-impact).
+- [Viewing Copilot usage and adoption](https://docs.github.com/en/copilot/how-tos/administer-copilot/view-usage-and-adoption): the usage metrics dashboard, with NDJSON export. Data can lag by up to three days.
+- [Copilot usage metrics](https://docs.github.com/en/copilot/concepts/copilot-usage-metrics/copilot-metrics): adoption cohorts, the adoption multiplier and the impact dashboard.
+- [Measuring the impact of generative AI](https://learn.github.com/well-architected/library/scenarios/measuring-genai-impact/): a GitHub Well-Architected scenario for building a measurement program.

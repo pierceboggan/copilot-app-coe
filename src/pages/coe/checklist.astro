@@ -33,7 +33,7 @@ const resolve = (url: string) => (url.startsWith('/') ? href(url) : url);
           <h2 class="f6 text-uppercase color-fg-muted mb-2">Phases</h2>
           {phases.map((phase, i) => (
             <a href={`#${phase.id}`} class="d-flex flex-justify-between">
-              <span>{i + 1}. {phase.name}</span>
+              <span>{i + 1}. {phase.nickname} <span class="color-fg-muted">({phase.name})</span></span>
               <span class="Counter" data-coe-phase-counter={phase.id}>0/{phase.items.length}</span>
             </a>
           ))}
@@ -63,7 +63,7 @@ const resolve = (url: string) => (url.startsWith('/') ? href(url) : url);
             <div class="Box-header">
               <div class="d-flex flex-wrap flex-items-center flex-justify-between gap-2 mb-1">
                 <h2 id={`${phase.id}-heading`} class="h3">
-                  Phase {i + 1}: {phase.name}
+                  Phase {i + 1}: {phase.nickname} <span class="color-fg-muted text-normal">({phase.name})</span>
                 </h2>
                 <span class="Label Label--done">{phase.timeframe}</span>
               </div>

@@ -11,6 +11,8 @@ export interface ChecklistItem {
 export interface ChecklistPhase {
   id: string;
   name: string;
+  /** Memorable name used in comms and headings. */
+  nickname: string;
   timeframe: string;
   goal: string;
   exitCriteria: string;
@@ -23,6 +25,7 @@ export const phases: ChecklistPhase[] = [
   {
     id: 'pilot',
     name: 'Pilot',
+    nickname: 'Prove it',
     timeframe: 'Weeks 1–2',
     goal: 'Run a short validation sprint that clears admin, security and support blockers for an org-wide launch.',
     exitCriteria: 'Validation users have run real sessions, nothing blocks a broad launch, and the launch date is set.',
@@ -118,6 +121,7 @@ export const phases: ChecklistPhase[] = [
   {
     id: 'expand',
     name: 'Expand',
+    nickname: 'Switch it on',
     timeframe: 'Weeks 3–4',
     goal: 'Turn the app on by default for everyone with a Copilot seat and get them to a first session.',
     exitCriteria: 'The app is enabled org-wide, launch comms have gone out, and most of the org has opened it once.',
@@ -219,6 +223,7 @@ export const phases: ChecklistPhase[] = [
   {
     id: 'scale',
     name: 'Scale',
+    nickname: 'Make it a habit',
     timeframe: 'Months 2–3',
     goal: 'Move everyone from a first session to weekly use, and make the app the default way teams start work.',
     exitCriteria: 'Most active developers use the app weekly, and onboarding is part of standard team setup.',
@@ -295,6 +300,7 @@ export const phases: ChecklistPhase[] = [
   {
     id: 'optimize',
     name: 'Optimize',
+    nickname: 'Compound it',
     timeframe: 'Ongoing',
     goal: 'Turn usage into measurable outcomes and keep improving.',
     exitCriteria: 'You can show outcome changes against baseline and the program runs without heroics.',
