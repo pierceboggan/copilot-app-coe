@@ -71,6 +71,8 @@ export interface UseCase {
   features: Feature[];
   steps?: string[];
   demo?: Demo;
+  /** Optional heading that groups use cases on the role page. Use cases with the same group must be adjacent. */
+  group?: string;
 }
 
 export interface Role {
@@ -82,6 +84,7 @@ export interface Role {
   dayInTheLife?: { time: string; text: string }[];
   useCases?: UseCase[];
   pitfalls?: string[];
+  groupIntros?: Record<string, string>;
 }
 
 export const roles: Role[] = [
@@ -89,18 +92,36 @@ export const roles: Role[] = [
     slug: 'engineer',
     name: 'Engineer',
     icon: 'code',
-    tagline: 'Run several agent sessions in parallel and take an issue all the way to a merged pull request.',
+    tagline: 'Run several sessions at once across the whole job: code, reviews, bug investigations, design docs, triage and the weekly update.',
     available: true,
     dayInTheLife: [
-      { time: '9:00', text: 'A morning automation has already summarized your open PRs. Two have failing checks.' },
-      { time: '9:15', text: 'You click Fix on the failing checks, then start a Plan mode session from the top issue in My work.' },
-      { time: '10:30', text: 'Three sessions run side by side in their own worktrees. You review plans and approve them.' },
-      { time: '14:00', text: 'You run /security-review on the finished change, address one finding and open the PR.' },
-      { time: '16:30', text: 'Review comments come in. The agent addresses them while you pair with a teammate.' },
+      { time: '9:00', text: 'A morning automation has summarized your open PRs. Two have failing checks, so you click Fix on both.' },
+      { time: '9:15', text: 'You start three more sessions: a Plan mode session on the top issue, an investigation of a new bug report and a design doc draft.' },
+      { time: '11:00', text: 'While those run, you open a teammate\'s pull request from Review requests and ask a session for a first pass.' },
+      { time: '13:30', text: 'The investigation is back with a root cause and two fix options. You pick one and the session writes the fix and a test.' },
+      { time: '15:00', text: 'A child session turns last sprint\'s merged PRs into a demo deck in a PowerPoint canvas.' },
+      { time: '16:30', text: 'You run /security-review on the finished change and open the PR. Your weekly status draft is waiting from an automation.' },
     ],
     useCases: [
       {
+        id: 'parallel-sessions',
+        group: 'Ship code',
+        title: 'Work three tasks at once',
+        summary: 'Each session runs in its own working tree, so a bug fix, a refactor and a spike never collide.',
+        mode: 'autopilot',
+        prompt:
+          'Investigate why the test suite is flaky on CI. Run the failing tests repeatedly to reproduce the failure, identify the root cause, and fix it without disabling or skipping any tests. Summarize the cause and the fix when you are done.',
+        outcome: 'A root-cause summary and a fix, produced while you focus on other sessions.',
+        features: ['Parallel sessions', 'Autopilot mode'],
+        steps: [
+          'Start one session per task and pick New working tree as the location.',
+          'Use Autopilot for well-scoped tasks and Interactive for the ones you want to steer.',
+          'Switch between sessions from the sidebar as each one needs you.',
+        ],
+      },
+      {
         id: 'issue-to-pr',
+        group: 'Ship code',
         demo: { src: '/demos/plan-review.webp', width: 1000, height: 346, alt: "Review plan prompt with three choices: Approve and implement this plan, Exit plan mode and I will prompt myself, and Suggest changes to the plan. Cancel and Continue buttons sit below.", caption: "Plan mode asks you to approve, redirect or exit before it changes anything." },
         title: 'Take an issue to a pull request',
         summary: 'Start from an issue in My work, review the plan, then let the agent implement and open the PR.',
@@ -116,22 +137,8 @@ export const roles: Role[] = [
         ],
       },
       {
-        id: 'parallel-sessions',
-        title: 'Work three tasks at once',
-        summary: 'Each session runs in its own working tree, so a bug fix, a refactor and a spike never collide.',
-        mode: 'autopilot',
-        prompt:
-          'Investigate why the test suite is flaky on CI. Run the failing tests repeatedly to reproduce the failure, identify the root cause, and fix it without disabling or skipping any tests. Summarize the cause and the fix when you are done.',
-        outcome: 'A root-cause summary and a fix, produced while you focus on other sessions.',
-        features: ['Parallel sessions', 'Autopilot mode'],
-        steps: [
-          'Start one session per task and pick New working tree as the location.',
-          'Use Autopilot for well-scoped tasks and Interactive for the ones you want to steer.',
-          'Switch between sessions from the sidebar as each one needs you.',
-        ],
-      },
-      {
         id: 'review-feedback',
+        group: 'Ship code',
         title: 'Address review comments and failing CI',
         summary: 'Let the agent resolve review threads and red checks on your pull request.',
         mode: 'interactive',
@@ -146,6 +153,7 @@ export const roles: Role[] = [
       },
       {
         id: 'security-review',
+        group: 'Ship code',
         title: 'Security check before you open a PR',
         summary: 'Run /security-review on in-progress changes to catch high-confidence vulnerabilities early.',
         mode: 'interactive',
@@ -155,6 +163,7 @@ export const roles: Role[] = [
       },
       {
         id: 'rubber-duck',
+        group: 'Ship code',
         title: 'Get a second opinion on a plan',
         summary: 'Ask the built-in rubber duck agent to critique a plan or implementation before you commit to it.',
         mode: 'plan',
@@ -165,6 +174,7 @@ export const roles: Role[] = [
       },
       {
         id: 'repo-config',
+        group: 'Ship code',
         title: 'Make a repository agent-ready',
         summary: 'Add .github/github-app.yml so every session installs dependencies and can start the dev server.',
         mode: 'interactive',
@@ -175,6 +185,7 @@ export const roles: Role[] = [
       },
       {
         id: 'morning-automation',
+        group: 'Ship code',
         demo: { src: '/demos/scheduled-automation.webp', width: 1000, height: 744, alt: "Edit scheduled automation dialog. Instructions read: Review the pull request queue and summarize anything that needs attention. Schedule is Daily at 9:00 AM, with Delete schedule, Cancel and Save buttons.", caption: "A scheduled automation is a prompt plus a schedule." },
         title: 'Start the day with a PR briefing',
         summary: 'A daily automation that checks your open pull requests before you sit down.',
@@ -187,6 +198,7 @@ export const roles: Role[] = [
       },
       {
         id: 'cloud-sandbox',
+        group: 'Ship code',
         title: 'Offload a heavy upgrade to the cloud',
         summary: 'Run resource-intensive work in a GitHub-hosted cloud sandbox and keep your machine free.',
         mode: 'autopilot',
@@ -197,6 +209,7 @@ export const roles: Role[] = [
       },
       {
         id: 'nightly-cloud-automation',
+        group: 'Ship code',
         title: 'Pair a cloud sandbox with a nightly automation',
         summary: 'Run a recurring heavy job, such as dependency upgrades, off your machine while you sleep.',
         mode: 'autopilot',
@@ -207,6 +220,7 @@ export const roles: Role[] = [
       },
       {
         id: 'cross-repo-orchestrate',
+        group: 'Ship code',
         title: 'Change several repositories together',
         summary: 'One orchestration chat runs a child session per repository and keeps the order right.',
         mode: 'plan',
@@ -224,6 +238,7 @@ export const roles: Role[] = [
       },
       {
         id: 'fleet-plan',
+        group: 'Ship code',
         title: 'Split an approved plan across agents',
         summary: 'Use /fleet so the independent steps of a plan run in parallel.',
         mode: 'autopilot',
@@ -240,6 +255,7 @@ export const roles: Role[] = [
       },
       {
         id: 'agent-merge',
+        group: 'Ship code',
         title: 'Shepherd a pull request with agent merge',
         summary: 'Agent merge addresses review comments, fixes failing checks and resolves conflicts while you start the next task.',
         mode: 'interactive',
@@ -254,7 +270,137 @@ export const roles: Role[] = [
           'Check in when CI stays red after two fix attempts, or when a fix touches files outside the pull request.',
         ],
       },
+      {
+        id: 'eng-investigate',
+        group: 'Everything around the code',
+        title: 'Investigate a bug before anyone writes a fix',
+        summary: 'Get a root cause and fix options first, so the fix you pick is the right one.',
+        mode: 'plan',
+        prompt:
+          'Here is a bug report and the error output. Reproduce the bug locally, trace the code path and find the root cause. Do not change any code yet. Report the steps to reproduce, the root cause with file and line references, two fix options with their trade-offs, and the test that would catch it.\n\n<paste bug report and error output>',
+        outcome: 'A reproduced bug, a root cause you can check and a fix you choose on purpose.',
+        features: ['Plan mode', 'Parallel sessions'],
+      },
+      {
+        id: 'eng-review-pr',
+        group: 'Everything around the code',
+        title: 'Get a first pass on a teammate\'s pull request',
+        summary: 'Open a review request in a session and let the agent read the diff and the code around it before you do.',
+        mode: 'interactive',
+        prompt:
+          'Read this pull request and the code it touches. List problems in order of severity: correctness bugs, missing tests, risky changes, then readability. Give the file and line for each and a suggested review comment I can post. Do not push any changes.',
+        outcome: 'A severity-ordered list of review comments, ready for you to check and post.',
+        features: ['My work', 'Interactive mode'],
+        steps: [
+          'Open My work and select a pull request under Review requests.',
+          'Start a session from it and run the prompt. Check the Files changed tab yourself.',
+          'Go back to the pull request detail view and click Review to submit.',
+        ],
+      },
+      {
+        id: 'eng-research',
+        group: 'Everything around the code',
+        title: 'Compare options before you pick a library or approach',
+        summary: 'Use /research for a cited comparison instead of an afternoon of tabs.',
+        mode: 'interactive',
+        prompt:
+          '/research Compare <option A> and <option B> for <what we need it to do>. Cover maintenance activity, license, performance, security history and migration cost from our current setup. Cite every claim and finish with a recommendation.',
+        outcome: 'A cited comparison and a recommendation you can paste into a design doc.',
+        features: ['Chats'],
+      },
+      {
+        id: 'eng-design-doc',
+        group: 'Everything around the code',
+        title: 'Write a design doc grounded in the code',
+        summary: 'The agent reads the code first, so the current-state section is accurate.',
+        mode: 'plan',
+        prompt:
+          'Draft a design doc for <change>. Read the code it touches first. Use these sections: context, goals and non-goals, current design with file references, proposed design, alternatives considered, rollout and migration, risks and open questions. Save it as docs/design/<name>.md and do not change any other files.',
+        outcome: 'A design doc draft with real file references, ready for review.',
+        features: ['Plan mode'],
+      },
+      {
+        id: 'eng-docs',
+        group: 'Everything around the code',
+        title: 'Bring the docs back in line with the code',
+        summary: 'Find every command, flag and option the docs get wrong, then fix them in one pull request.',
+        mode: 'autopilot',
+        prompt:
+          'Compare the README and the docs folder against the current code. List every command, flag, configuration option or API the docs describe wrong or leave out. Fix them in one pull request, and run each command you document to make sure it works.',
+        outcome: 'One pull request that makes the docs match the code, with every command tested.',
+        features: ['Autopilot mode'],
+      },
+      {
+        id: 'eng-triage',
+        group: 'Everything around the code',
+        title: 'Triage the issues in your area',
+        summary: 'Check each open issue against the current code before you label it.',
+        mode: 'interactive',
+        prompt:
+          'List open issues in <owner/repo> with the label <area> and no assignee. For each one, check whether the code still has the problem, suggest a label and a priority, flag likely duplicates with links and note missing reproduction steps. Do not edit any issues. Give me a table.',
+        outcome: 'A triage table you can act on in a few minutes.',
+        features: ['My work', 'Interactive mode'],
+      },
+      {
+        id: 'eng-incident',
+        group: 'Everything around the code',
+        title: 'Follow up after an incident',
+        summary: 'Draft the review and the follow-up issues from the notes and the changes that shipped.',
+        mode: 'plan',
+        prompt:
+          'Using the incident notes below and the pull requests merged in <owner/repo> between <start> and <end>, draft a post-incident review: timeline, impact, root cause, what went well, what did not and action items. Then draft one issue per action item with an owner placeholder. Do not create the issues until I approve them.\n\n<paste incident notes>',
+        outcome: 'A post-incident review draft and a set of follow-up issues waiting for your approval.',
+        features: ['Plan mode'],
+      },
+      {
+        id: 'eng-plan-epic',
+        group: 'Everything around the code',
+        title: 'Break an epic into issues you can run in parallel',
+        summary: 'Get pull-request-sized issues with dependencies marked, so independent ones can start at once.',
+        mode: 'plan',
+        prompt:
+          'Read <epic issue link> and the code it touches. Break the work into issues small enough for one pull request each. For each issue give a title, a description, acceptance criteria, the files it will likely touch and what it depends on. Mark which issues can run in parallel. Show me the list before you create anything.',
+        outcome: 'A reviewed set of issues, with the ones that can run side by side marked.',
+        features: ['Plan mode', 'My work', 'Parallel sessions'],
+      },
+      {
+        id: 'eng-status',
+        group: 'Everything around the code',
+        title: 'Write your weekly update from what you shipped',
+        summary: 'Save it as a weekly automation so the draft is ready on Friday.',
+        mode: 'interactive',
+        prompt:
+          'Draft my weekly update from the pull requests I opened, reviewed or merged in the last seven days and the issues I closed. Group them by project, one line each with a link. Keep it under 200 words and put anything blocked first.',
+        outcome: 'A status draft built from real activity, ready to edit and send.',
+        features: ['Automations', 'Interactive mode'],
+      },
+      {
+        id: 'eng-demo-deck',
+        group: 'Everything around the code',
+        title: 'Turn a sprint into a demo deck',
+        summary: 'Build the sprint review deck from merged pull requests in a PowerPoint canvas.',
+        mode: 'interactive',
+        prompt:
+          'Build a six-slide sprint review deck in a PowerPoint canvas from the pull requests merged in <owner/repo> in the last two weeks. Include one slide of highlights, one slide for each major change with what it does for users, one slide with the number of pull requests merged and one slide on what comes next. Keep each slide under 40 words.',
+        outcome: 'A sprint review deck drawn from what shipped.',
+        features: ['Office canvases', 'Canvases'],
+      },
+      {
+        id: 'eng-data',
+        group: 'Everything around the code',
+        title: 'Find out where CI time goes',
+        summary: 'Analyze a CSV of CI runs in an Excel canvas and get the changes that save the most time.',
+        mode: 'interactive',
+        prompt:
+          'Open the attached CSV of CI runs in an Excel canvas. Find the slowest jobs, the trend over the last 30 days and the tests that fail most often. Add a summary sheet and a chart, then suggest the three changes that would save the most time.',
+        outcome: 'A summary sheet, a chart and a short list of fixes ranked by time saved.',
+        features: ['Office canvases', 'Canvases'],
+      },
     ],
+    groupIntros: {
+      'Ship code': 'Take work from issue to merged pull request, several tasks at a time.',
+      'Everything around the code': 'Investigations, reviews, research, design docs, triage, incident follow-up, planning, status updates, decks and data. Run them next to your coding sessions.',
+    },
     pitfalls: [
       'Vague prompts produce vague plans. Name the files, the constraint and how you will judge success.',
       'Autopilot is great for well-scoped tasks. Use Plan mode when the approach is still open.',

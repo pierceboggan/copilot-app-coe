@@ -1,6 +1,6 @@
 # GitHub Copilot app Enablement Center
 
-A site for running a Center of Excellence around the GitHub Copilot app. It has role-based use cases with ready-to-run prompts, a CoE operating model, governance, customization and measurement guides, an interactive rollout checklist, a maturity assessment, playbooks and a library of downloadable templates.
+A site that helps organizations accelerate their engineers with the GitHub Copilot app, for all types of work: code, reviews, bug investigations, design docs, triage and status updates, run in parallel sessions. It has role-based use cases with ready-to-run prompts, a CoE operating model, governance, customization and measurement guides, an interactive rollout checklist, a maturity assessment, playbooks and a library of downloadable templates.
 
 Content is based on the public [Copilot app docs](https://docs.github.com/copilot/how-tos/github-copilot-app).
 

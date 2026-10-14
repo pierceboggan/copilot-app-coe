@@ -14,6 +14,15 @@ export function getStaticPaths() {
 const { role } = Astro.props as { role: Role };
 const useCases = role.useCases ?? [];
 const features = [...new Set(useCases.flatMap((u) => u.features))].sort();
+const groupNames = [...new Set(useCases.map((u) => u.group ?? ''))];
+const grouped = groupNames.some(Boolean);
+const groups = groupNames.map((name) => ({
+  name,
+  id: name ? `group-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}` : '',
+  intro: role.groupIntros?.[name],
+  items: useCases.filter((u) => (u.group ?? '') === name),
+}));
+const Title = grouped ? 'h4' : 'h3';
 ---
 <Base title={`${role.name} use cases`} description={role.tagline}>
   <section class="coe-page-hero">
@@ -37,7 +46,12 @@ const features = [...new Set(useCases.flatMap((u) => u.features))].sort();
           <nav class="coe-toc" aria-label="Use cases on this page">
             <h2 class="f6 text-uppercase color-fg-muted mb-2">On this page</h2>
             <a href="#day-in-the-life">A day in the life</a>
-            {useCases.map((u) => <a href={`#${u.id}`}>{u.title}</a>)}
+            {groups.map((g) => (
+              <>
+                {g.name && <a href={`#${g.id}`} class="text-bold">{g.name}</a>}
+                {g.items.map((u) => <a href={`#${u.id}`} class={g.name ? 'pl-3' : undefined}>{u.title}</a>)}
+              </>
+            ))}
             <a href="#pitfalls">Pitfalls to avoid</a>
           </nav>
         </div>
@@ -71,10 +85,18 @@ const features = [...new Set(useCases.flatMap((u) => u.features))].sort();
           </div>
           <p class="sr-only" aria-live="polite" data-coe-filter-status></p>
 
+          {groups.map((g) => (
+          <div class="mb-5" data-coe-group>
+          {g.name && (
+            <div class="mb-3">
+              <h3 id={g.id} class="h3">{g.name}</h3>
+              {g.intro && <p class="color-fg-muted mb-0">{g.intro}</p>}
+            </div>
+          )}
           <div class="d-flex flex-column gap-4">
-            {useCases.map((u) => (
+            {g.items.map((u) => (
               <article id={u.id} class="Box p-4" data-features={u.features.join('|')}>
-                <h3 class="h3 mb-1">{u.title}</h3>
+                <Title class="h3 mb-1">{u.title}</Title>
                 <p class="color-fg-muted mb-3">{u.summary}</p>
                 <div class="d-flex flex-wrap gap-1 mb-3">
                   {u.features.map((f) => (
@@ -117,6 +139,8 @@ const features = [...new Set(useCases.flatMap((u) => u.features))].sort();
               </article>
             ))}
           </div>
+          </div>
+          ))}
         </section>
 
         <section id="pitfalls" class="mt-6">
@@ -143,6 +167,9 @@ const features = [...new Set(useCases.flatMap((u) => u.features))].sort();
       const match = !value || (card.dataset.features ?? '').split('|').includes(value);
       card.hidden = !match;
       if (match) shown++;
+    }
+    for (const group of document.querySelectorAll<HTMLElement>('[data-coe-group]')) {
+      group.hidden = !group.querySelector('article:not([hidden])');
     }
     if (status) status.textContent = `${shown} use case${shown === 1 ? '' : 's'} shown`;
   });
