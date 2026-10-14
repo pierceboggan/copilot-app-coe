@@ -13,8 +13,9 @@ const pageTitle = title === 'Home' ? 'GitHub Copilot app Enablement Center' : `$
 const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
 
 const nav = [
-  { label: 'Get started', path: '/get-started/' },
+  { label: 'Learn', path: '/get-started/' },
   { label: 'Use cases', path: '/roles/' },
+  { label: 'Prompts', path: '/prompts/' },
   { label: 'Center of Excellence', path: '/coe/' },
   { label: 'Checklist', path: '/coe/checklist/' },
   { label: 'Resources', path: '/resources/' },
@@ -76,6 +77,12 @@ const isCurrent = (p: string) =>
           <span>Copilot app Enablement Center. A community resource, not official GitHub documentation.</span>
         </div>
         <nav class="d-flex gap-3 flex-wrap" aria-label="Footer">
+          <a href={href('/coe/admin-guide/')}>Admin guide</a>
+          <a href={href('/verify/')}>Verify the agent's work</a>
+          <a href={href('/coe/metrics/')}>Start from the metric</a>
+          <a href={href('/stories/')}>Stories</a>
+          <a href={href('/whats-new/')}>What's new</a>
+          <a href={href('/how-we-built-this/')}>How we built this</a>
           <a href={href('/which-tool/')}>Which tool when</a>
           <a href={href('/coe/customizations/')}>Customizations</a>
           <a href={href('/community/')}>Community</a>

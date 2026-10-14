@@ -1,0 +1,52 @@
+---
+layout: ../layouts/Doc.astro
+title: What's new for CoE leads
+eyebrow: Updates
+description: Recent Copilot app releases, filtered to what changes your rollout, training or governance.
+---
+
+The app ships often. This page picks out the changes a CoE lead should act on and says what to do about each one. For every change, read the [public release notes](https://github.com/github/app/releases).
+
+Last reviewed against release v1.1.29 (October 13, 2026).
+
+## Governance and customization
+
+| Release | What changed | What to do |
+| --- | --- | --- |
+| [v1.1.28](https://github.com/github/app/releases/tag/v1.1.28) | **Customize** has a **From your organization** tab that shows plugins from enterprise-managed marketplaces. | Publish your starter kit to a managed marketplace and tell people where to find it. See [plugin marketplaces](/coe/customizations/#plugin-marketplaces). |
+| [v1.1.29](https://github.com/github/app/releases/tag/v1.1.29) | **Manage marketplaces** moved to the bottom of the **Add** menu in **Customize**, and plugin search can filter by marketplace. | Update screenshots and training steps that show where to add a marketplace. |
+| [v1.1.29](https://github.com/github/app/releases/tag/v1.1.29) | Sessions in a subfolder of a repository pick up that package's instructions and skills. | In monorepos, put package-specific instructions next to the package. See [customizations](/coe/customizations/). |
+| [v1.1.27](https://github.com/github/app/releases/tag/v1.1.27) | When your organization restricts MCP servers, the MCP registry hides servers that aren't permitted and still shows installed and approved ones. | Tell people that a missing server usually means it isn't on the allowlist, and where to request it. |
+| [v1.1.27](https://github.com/github/app/releases/tag/v1.1.27) | Sessions in a newly added local repository stay on **Always ask** for tool permissions until you trust the repository. | Cover the trust prompt in first-hour training so people don't approve it without reading. |
+| [v1.1.24](https://github.com/github/app/releases/tag/v1.1.24) | The **Featured** tab in **Customize** respects your organization's plugin marketplace policy and prefers your organization's version of a plugin. | Publish your own versions of popular plugins if you need changes to them. |
+| [v1.1.27](https://github.com/github/app/releases/tag/v1.1.27) | OAuth MCP servers have an **Update authorization** action. | Add it to your support FAQ for expired connector sign-ins. |
+| [v1.1.26](https://github.com/github/app/releases/tag/v1.1.26) | Tool permissions can be set from the mode menu and with `/permissions`. | Teach it in the [verify guide](/verify/#ladder) as part of the first rung. |
+| [v1.1.23](https://github.com/github/app/releases/tag/v1.1.23) | A project setting and `/sandbox` run the agent's shell commands in a local sandbox restricted to the session's workspace. | Decide your default for sensitive repositories. See [sandboxes](/coe/governance/#sandboxes). |
+
+## Automations and orchestration
+
+| Release | What changed | What to do |
+| --- | --- | --- |
+| [v1.1.29](https://github.com/github/app/releases/tag/v1.1.29) | Creating cloud automations is back, including repository event triggers and cloud schedules that run while your computer is off. Creation was paused in v1.1.27. | Move team chores that should run while laptops are off to cloud automations. Check the cloud agent policy first. |
+| [v1.1.27](https://github.com/github/app/releases/tag/v1.1.27) | An interrupted coordinator session and its child sessions can be resumed. | Mention it in office hours for people running long multi-session work. |
+| [v1.1.26](https://github.com/github/app/releases/tag/v1.1.26) | Child chats, plus running Bash and PowerShell snippets from a session. | Add a child chat example to your champion training. |
+| [v1.1.28](https://github.com/github/app/releases/tag/v1.1.28) | Custom agents can suggest next steps. | If you ship custom agents, add suggested next steps so new users know where to go. |
+
+## Everyday use and accessibility
+
+| Release | What changed | What to do |
+| --- | --- | --- |
+| [v1.1.28](https://github.com/github/app/releases/tag/v1.1.28) | Auto model selection explains its choice, and files can be downloaded from the **Files** panel. | Mention both in the first-week training. |
+| [v1.1.27](https://github.com/github/app/releases/tag/v1.1.27) | The artifact editor keeps version history. | Tell document and deck authors they can roll back. |
+| [v1.1.24](https://github.com/github/app/releases/tag/v1.1.24) | Retry a turn with a different model, recall prompts with Ctrl or Cmd+R, and voice dictation is on by default. | Add these tips to the [fluency module](/get-started/fluency/). |
+| [v1.1.27](https://github.com/github/app/releases/tag/v1.1.27) and [v1.1.24](https://github.com/github/app/releases/tag/v1.1.24) | New accessibility preferences: **Show underlines** and increased contrast. | Include them in your accessibility guidance and onboarding. |
+
+## Keep this page current
+
+A CoE champion can own this page. Once a week, read the new release notes and add anything that changes policy, training or support. A weekly automation can draft it for you:
+
+```text
+Read the GitHub Copilot app release notes published in the last 7 days at github.com/github/app/releases.
+List only changes that affect admins, security, training or support.
+For each one, write one row: release, what changed, what a CoE lead should do.
+```

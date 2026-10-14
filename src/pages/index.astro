@@ -33,6 +33,27 @@ const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
     </div>
   </section>
 
+  <section class="coe-section coe-section-muted" aria-labelledby="why-now">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2">Why now</p>
+      <h2 class="coe-h2 mb-4" id="why-now">AI is already part of how developers start</h2>
+      <div class="d-flex gap-6 flex-wrap mb-3">
+        <div style="max-width:340px">
+          <div class="coe-stat">80%</div>
+          <p class="color-fg-muted mb-0">of new developers on GitHub use Copilot in their first week.</p>
+        </div>
+        <div style="max-width:340px">
+          <div class="coe-stat">518.7M</div>
+          <p class="color-fg-muted mb-0">pull requests merged on GitHub in a year, a record and up 29% year over year.</p>
+        </div>
+      </div>
+      <p class="f6 color-fg-muted mb-0">
+        Source: <a href="https://github.blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/">GitHub Octoverse 2025</a>.
+        A CoE turns that early habit into shared practice. <a href={href('/stories/')}>See what that can look like →</a>
+      </p>
+    </div>
+  </section>
+
   <section class="coe-section" aria-labelledby="beyond-code">
     <div class="coe-container">
       <p class="coe-eyebrow mb-2">More than writing code</p>
@@ -67,7 +88,7 @@ const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
         <a class="coe-card" href={href('/get-started/')}>
           <span class="coe-card-icon"><Octicon name="rocket" size={20} /></span>
           <h3>New to the app</h3>
-          <p>Install, sign in and finish your first Plan mode session in under an hour.</p>
+          <p>A four-module learning path. Finish a real task in your first hour, then build the habits over a month.</p>
         </a>
         <a class="coe-card" href={href('/coe/')}>
           <span class="coe-card-icon"><Octicon name="organization" size={20} /></span>
@@ -84,6 +105,16 @@ const useCaseCount = roles.reduce((n, r) => n + (r.useCases?.length ?? 0), 0);
             </span>
             <span class="Progress"><span class="Progress-item color-bg-success-emphasis" data-coe-home-progress-bar style="width:0%"></span></span>
           </span>
+        </a>
+        <a class="coe-card" href={href('/coe/admin-guide/')}>
+          <span class="coe-card-icon"><Octicon name="shield-check" size={20} /></span>
+          <h3>Setting it up</h3>
+          <p>The admin guide: policies, models, MCP servers and plugins, then launch, training and scaling.</p>
+        </a>
+        <a class="coe-card" href={href('/prompts/')}>
+          <span class="coe-card-icon"><Octicon name="copilot" size={20} /></span>
+          <h3>Looking for a prompt</h3>
+          <p>Every prompt on the site in one place. Filter by role, feature or the metric you want to move.</p>
         </a>
         <a class="coe-card" href={href('/coe/assessment/')}>
           <span class="coe-card-icon"><Octicon name="goal" size={20} /></span>
