@@ -33,4 +33,4 @@ Checklist progress, the chosen repository and the color mode are stored in the b
 
 ## Deploy
 
-`.github/workflows/deploy.yml` builds the site and publishes it to GitHub Pages on every push to `master`. The site lives at https://pierceboggan.github.io/copilot-app-coe/, so `astro.config.mjs` sets `base` to `/copilot-app-coe`. In `.astro` files, wrap internal paths in `href()` from `src/lib/paths.ts`. MDX pages can use plain `/path/` links, because a build step adds the base to them.
+`.github/workflows/deploy.yml` builds the site and publishes it to GitHub Pages on every push to `main`. The site lives at https://pierceboggan.github.io/copilot-app-coe/, so `astro.config.mjs` sets `base` to `/copilot-app-coe`. In `.astro` files, wrap internal paths in `href()` from `src/lib/paths.ts`. MDX pages can use plain `/path/` links, because a build step adds the base to them.
