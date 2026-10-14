@@ -1,0 +1,25 @@
+---
+import { lessonKey, modules } from '../data/learning';
+import Octicon from './Octicon.astro';
+
+interface Props {
+  module: string;
+  lesson: string;
+}
+
+const { module: moduleId, lesson: lessonId } = Astro.props;
+const lesson = modules.find((m) => m.id === moduleId)?.lessons.find((l) => l.id === lessonId);
+if (!lesson) throw new Error(`Unknown lesson ${moduleId}/${lessonId}`);
+const key = lessonKey(moduleId, lessonId);
+const inputId = `lesson-${moduleId}-${lessonId}`;
+---
+<div class="coe-lesson-check Box p-3 my-4 d-flex flex-items-center gap-2" data-coe-lesson-box>
+  <input type="checkbox" id={inputId} data-coe-lesson={key} />
+  <label for={inputId} class="d-flex flex-items-center gap-1">
+    <Octicon name="check-circle" /> I did this: {lesson.title}
+  </label>
+</div>
+
+<script>
+  import '../scripts/learning';
+</script>

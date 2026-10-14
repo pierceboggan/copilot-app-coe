@@ -1,0 +1,80 @@
+---
+const defaults = { users: 120, low: 1, high: 2, rate: 90, cost: 10000 };
+const fields = [
+  { id: 'users', label: 'Weekly active users', step: 1, min: 0, prefix: '' },
+  { id: 'low', label: 'Hours saved per user per week, low (25th percentile)', step: 0.25, min: 0, prefix: '' },
+  { id: 'high', label: 'Hours saved per user per week, high (75th percentile)', step: 0.25, min: 0, prefix: '' },
+  { id: 'rate', label: 'Loaded cost per hour', step: 1, min: 0, prefix: '$' },
+  { id: 'cost', label: 'Program cost per month (seats and other costs)', step: 100, min: 0, prefix: '$' },
+] as const;
+---
+<form class="Box p-4 my-4 not-markdown" data-coe-roi aria-labelledby="roi-title">
+  <h3 id="roi-title" class="h4 mb-3">ROI calculator</h3>
+  <div class="d-flex flex-column flex-md-row gap-4">
+    <div class="flex-1">
+      {fields.map((f) => (
+        <div class="form-group mt-0 mb-3">
+          <div class="form-group-header"><label for={`roi-${f.id}`}>{f.label}{f.prefix && ` (${f.prefix})`}</label></div>
+          <div class="form-group-body">
+            <input class="form-control input-block" type="number" inputmode="decimal" id={`roi-${f.id}`} name={f.id} min={f.min} step={f.step} value={defaults[f.id]} />
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="flex-1">
+      <dl class="d-flex flex-column gap-3 m-0" aria-live="polite">
+        <div>
+          <dt class="f6 color-fg-muted">Hours saved per month</dt>
+          <dd class="f3 text-semibold ml-0" data-out="hours"></dd>
+        </div>
+        <div>
+          <dt class="f6 color-fg-muted">Value of time saved per month</dt>
+          <dd class="f3 text-semibold ml-0" data-out="value"></dd>
+        </div>
+        <div>
+          <dt class="f6 color-fg-muted">Net per month after program cost</dt>
+          <dd class="f3 text-semibold ml-0" data-out="net"></dd>
+        </div>
+        <div>
+          <dt class="f6 color-fg-muted">Return per dollar spent</dt>
+          <dd class="f3 text-semibold ml-0" data-out="ratio"></dd>
+        </div>
+      </dl>
+      <p class="f6 color-fg-muted mt-3 mb-0">Uses 4.33 weeks per month. Nothing you type leaves this page.</p>
+    </div>
+  </div>
+</form>
+
+<script>
+  const WEEKS_PER_MONTH = 4.33;
+  const form = document.querySelector<HTMLFormElement>('[data-coe-roi]');
+  if (form) {
+    const num = (name: string) => {
+      const v = Number((form.elements.namedItem(name) as HTMLInputElement | null)?.value);
+      return Number.isFinite(v) && v > 0 ? v : 0;
+    };
+    const int = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+    const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const out = (key: string, text: string) => {
+      const el = form.querySelector<HTMLElement>(`[data-out="${key}"]`);
+      if (el) el.textContent = text;
+    };
+    const update = () => {
+      const users = num('users');
+      const a = num('low');
+      const b = num('high');
+      const [low, high] = a <= b ? [a, b] : [b, a];
+      const rate = num('rate');
+      const cost = num('cost');
+      const hLow = users * low * WEEKS_PER_MONTH;
+      const hHigh = users * high * WEEKS_PER_MONTH;
+      out('hours', `${int.format(hLow)} to ${int.format(hHigh)}`);
+      out('value', `${usd.format(hLow * rate)} to ${usd.format(hHigh * rate)}`);
+      out('net', `${usd.format(hLow * rate - cost)} to ${usd.format(hHigh * rate - cost)}`);
+      out('ratio', cost > 0 ? `${((hLow * rate) / cost).toFixed(1)}x to ${((hHigh * rate) / cost).toFixed(1)}x` : 'Enter a program cost');
+    };
+    form.addEventListener('submit', (e) => e.preventDefault());
+    form.addEventListener('input', update);
+    update();
+  }
+</script>

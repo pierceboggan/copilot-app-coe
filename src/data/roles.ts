@@ -1,4 +1,5 @@
 import type { SessionMode } from '../lib/deeplink';
+import { outcomesFor, type OutcomeId } from './outcomes';
 
 export type Feature =
   | 'Plan mode'
@@ -983,3 +984,16 @@ export const roles: Role[] = [
 ];
 
 export const availableRoles = roles.filter((r) => r.available);
+
+export interface PromptEntry extends UseCase {
+  role: Pick<Role, 'slug' | 'name' | 'icon'>;
+  outcomes: OutcomeId[];
+}
+
+export const promptEntries: PromptEntry[] = availableRoles.flatMap((role) =>
+  (role.useCases ?? []).map((u) => ({
+    ...u,
+    role: { slug: role.slug, name: role.name, icon: role.icon },
+    outcomes: outcomesFor(u.id),
+  })),
+);

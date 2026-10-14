@@ -1,0 +1,66 @@
+---
+layout: ../layouts/Doc.astro
+title: Verify the agent's work
+eyebrow: Best practices
+description: What to check before you merge, and how to raise agent autonomy one step at a time.
+---
+import PromptBlock from '../components/PromptBlock.astro';
+import RepoSetting from '../components/RepoSetting.astro';
+
+You own what you merge, whoever wrote it. Agents write a lot of code quickly, so a review habit matters more, not less. This page covers what to check on every change and how to give agents more autonomy as your safeguards improve.
+
+<RepoSetting />
+
+## Decide how you will check before you start
+
+Write the check into the prompt. If the agent knows how the result will be judged, it can run that check itself and show you the evidence.
+
+<PromptBlock mode="plan" prompt="Before you write code, tell me exactly how we will verify this change: which tests prove it works, which existing behavior must not change, and what I should look at by hand. Then implement it and show the evidence for each check." />
+
+## The review checklist
+
+Use this on every agent-authored change. It takes a few minutes when the change is well scoped.
+
+1. **Read the diff.** Open **Changes** in the session. Look for files you didn't expect to change, deleted tests, broad catch blocks, new dependencies and hard-coded values.
+2. **Check the tests.** Ask which tests the agent ran and what the output was. Make sure new tests fail without the change. A test that always passes proves nothing.
+3. **Look at the result.** For UI changes, open the page in the integrated browser. For data or document work, open the file in its canvas and spot-check a few values against the source.
+4. **Get a second opinion.** `/rubber-duck` reviews the plan, code or tests on a different model and gives you concrete feedback.
+5. **Run a security check.** `/security-review` looks for vulnerabilities in the change. It is in public preview. It does not replace code scanning or human security review for sensitive code.
+6. **Let CI and reviewers do their part.** Open the pull request and follow your normal review process. Required checks and required reviewers apply to agent-authored pull requests like any other.
+
+<PromptBlock mode="interactive" prompt="Summarize what you changed and why, list every command you ran with its result, and point out anything you were unsure about, skipped or did not test." />
+
+<PromptBlock mode="interactive" prompt="/rubber-duck Review this change as a skeptical senior reviewer. List the three riskiest assumptions and what would prove each one wrong." />
+
+## Signs you should step in
+
+- The agent retries the same failing fix more than twice.
+- CI stays red after the agent says it fixed it.
+- The diff grows well past what the task needed.
+- Tests were deleted, skipped or loosened to make them pass.
+- The agent asks for credentials, broader permissions or a tool it didn't need before.
+
+When you see one, stop the session or switch to Interactive mode, then narrow the task.
+
+<h2 id="ladder">The autonomy ladder</h2>
+
+Start at the bottom. Move a team or repository up one rung when the checks at the current rung are routine and catch problems reliably. Every rung uses controls that exist in the app today.
+
+| Rung | How it runs | What keeps it safe | Good for |
+| --- | --- | --- | --- |
+| **1. Interactive** | The agent suggests changes and waits for your input before it continues. | You approve each step. Tool permissions are set from the mode menu or `/permissions`. | New users, unfamiliar code, risky areas |
+| **2. Plan** | The agent writes a plan, you approve it, then it carries it out. | You catch wrong approaches before any code is written. | Changes that touch many files or shared code |
+| **3. Autopilot in a new working tree** | The agent writes code, runs tests and iterates on its own. | The session works on its own branch, so nothing lands until you review the diff and open a pull request. | Well-scoped tasks with good tests |
+| **4. Autopilot in a sandbox** | Same as rung 3, with the environment locked down. | A local sandbox restricts filesystem, network and credential access for agent-run tools. A cloud sandbox (public preview) runs the whole session off your machine. | Long jobs, unfamiliar dependencies, parallel work |
+| **5. Automations** | A saved prompt runs on a schedule, on an issue or pull request event, or on demand, locally or in the cloud. | You choose the tools each cloud automation can use. Output is a comment, issue or pull request that people review. | Triage, standups, dependency checks, recurring reports |
+| **6. Agent merge** | The session reads the pull request, fixes what blocks it and merges as soon as GitHub allows. It turns itself off after the merge. | Branch rulesets decide what "GitHub allows" means. Keep required reviews and required status checks on. | Pull requests that are approved and close to done |
+
+Rungs 5 and 6 are only as safe as your repository rules. Before you turn them on, set a ruleset that requires at least one human approving review and passing status checks on your default branch. See [about rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets).
+
+## For CoE leads
+
+- Teach this page in the [first hour](/get-started/first-hour/#review-pr) and the [fluency module](/get-started/fluency/#check).
+- Track "issues caught before merge" from the [start from the metric](/coe/metrics/#issues-caught-before-merge) page to show that review is working.
+- Set organization defaults for sandboxes, MCP servers and plugins on the [governance](/coe/governance/) page.
+
+Sources: [working with agent sessions](https://docs.github.com/en/copilot/how-tos/github-copilot-app/agent-sessions), [managing issues and pull requests](https://docs.github.com/en/copilot/how-tos/github-copilot-app/managing-issues-and-pull-requests) and [using automations](https://docs.github.com/en/copilot/how-tos/github-copilot-app/using-automations).

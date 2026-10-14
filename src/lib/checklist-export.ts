@@ -11,7 +11,7 @@ export function checklistMarkdown(phases: ChecklistPhase[], done: Set<string>, i
     '',
   ];
   phases.forEach((phase, index) => {
-    lines.push(`## Phase ${index + 1}: ${phase.name} (${phase.timeframe})`, '', phase.goal, '');
+    lines.push(`## Phase ${index + 1}: ${phase.nickname} (${phase.name}, ${phase.timeframe})`, '', phase.goal, '');
     for (const item of phase.items) {
       lines.push(`- [${done.has(item.id) ? 'x' : ' '}] **${item.title}** (${item.owner})`);
       if (includeDetail) lines.push(`  ${item.detail}`);

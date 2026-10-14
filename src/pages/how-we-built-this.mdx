@@ -1,0 +1,72 @@
+---
+layout: ../layouts/Doc.astro
+title: How we built this site with the Copilot app
+eyebrow: Dogfooding
+description: The real prompts, sessions and review loop behind this site, including what went wrong.
+---
+import PromptBlock from '../components/PromptBlock.astro';
+import RepoSetting from '../components/RepoSetting.astro';
+
+We built this site with the Copilot app, mostly in plain-language requests. Here is how it went. The prompts are real, with typos fixed and a few internal details removed.
+
+## The setup
+
+One person drove the work. They used two kinds of session:
+
+- **A coordinator chat.** This is where they talked about the site, did research and made decisions. It had no branch and no working tree.
+- **A project session for the build.** The coordinator created it in its own working tree on its own branch. It wrote the code, ran the build, took screenshots, committed and opened pull requests, then reported back to the coordinator.
+
+New requests went to the coordinator, which passed them to the build session along with any context it needed. The build session couldn't merge to the public site. A person reviewed every public pull request.
+
+## The first prompt
+
+The project started with one message in **Plan** mode:
+
+> I want to make a new website that is a "GitHub Copilot app" enablement center. It gives you all the resources you need to run a center of excellence on the GitHub Copilot app, with use cases for each role type (engineer, PM, marketing, etc.). The CoE should have actual resources and a checklist. Brainstorm a plan for this. Obviously, we want it to look like the GitHub website.
+
+The plan set the stack (Astro with Primer CSS), the information architecture and five build phases. It also set one rule that held for the whole project: describe only what the app can do today, and mark anything uncertain with a TODO.
+
+## How the site grew
+
+Each change started as a short request. Most were one or two sentences.
+
+| Step | The request, in short | What the agent did |
+| --- | --- | --- |
+| Scaffold | "Keep moving this session forward." | Built the shell, theme, Get started, the checklist and the first two role pages, committing in phases. |
+| More roles | "For PM: feedback triage, data analysis, rapid prototyping, quality presentation. For DevRel: videos, blog posts, social feedback. For sales: …" | Merged near-duplicate workflows, added a Sales role page and marked connector-dependent steps as prerequisites. |
+| Faster rollout | "We should also be more aggressive about the rollout." | Compressed the playbooks into a two-week validation sprint and an org-wide launch, and updated KPIs and comms to match. |
+| Customizations | "Talk about customizations and plugin marketplaces with enterprise-managed settings, and how the app is for more than just writing code." | Added the customizations page and made "more than code" a theme on the home page and the which-tool guide. |
+| TODO audit | "Check them and see where we stand." | Checked every TODO against public docs and release notes, resolved the ones it could confirm and wrote down the evidence for each. |
+| Demos | "Let's do it!" | Captured real screenshots of the app with test data, added captions and alt text and compressed them. |
+| Going public | "Actually, you can just make it public. Nothing private here." | Did a confidentiality pass, then published a fresh single-commit public repository and deployed to GitHub Pages. |
+| This round | "Let's model the enablement materials other AI vendors publish, within reason." | Built the learning path, prompt library, admin guide, verify guide, ROI calculator, stories and this page. |
+
+## The review loop
+
+Every round went through the same checks before a person looked at it:
+
+1. **Type check and build.** `npm run check` and `npm run build`, which also builds the search index.
+2. **Link and base path check.** The agent served the built site under the real base path and loaded every page in a headless browser. It failed the round on any 404 or link that skipped the base path.
+3. **Screenshots.** The agent captured key pages in a headless browser so the reviewer could see the result without running anything.
+4. **Confidentiality scan.** Before anything went public, the agent searched the built site and the source for internal names, hosts and details that public docs don't support. It wrote the findings to a list for the reviewer.
+5. **Draft pull request.** The agent pushed a branch and opened a pull request. A person read it and merged it.
+
+Publishing taught us the most. Earlier commits had been drafted in a private repository with internal context. Rather than rewrite that history, we created a new public repository with only the final reviewed tree as one commit. The private repository stayed private.
+
+## What we would do differently
+
+- **Write the confidentiality rule on day one.** We added "public sources only" late, and that made the scrub bigger than it needed to be.
+- **Start the TODO list early.** Marking uncertain claims as TODO from the start made the audit quick. Every TODO had a note saying what was unknown.
+- **Use an automation for upkeep.** We did this all by hand. The [What's new](/whats-new/) page is a good candidate for a weekly automation that drafts rows from release notes.
+
+<RepoSetting />
+
+## Try it on your own project
+
+Start a chat and plan before you build:
+
+<PromptBlock mode="plan" prompt="I want to build an internal enablement site for a tool my team uses. Ask me five questions about the audience and the content, then propose a stack, a page list and build phases. Mark any claim about the tool that you can't confirm from public docs with a TODO." />
+
+Then add your own review loop to every round:
+
+<PromptBlock mode="autopilot" prompt="Build the site, serve the output under its real base path, load every page in a headless browser and fail on any 404 or broken link. Capture screenshots of the home page and two other key pages. Then summarize what changed since the last commit." />

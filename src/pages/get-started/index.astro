@@ -1,0 +1,80 @@
+---
+import Octicon from '../../components/Octicon.astro';
+import { lessonKey, modules, totalLessons } from '../../data/learning';
+import Base from '../../layouts/Base.astro';
+import { href } from '../../lib/paths';
+
+const allKeys = modules.flatMap((m) => m.lessons.map((l) => lessonKey(m.id, l.id))).join('|');
+---
+<Base title="Learning path" description="Four short modules that take you from install to teaching your team: first hour, fluency, first week and first month.">
+  <section class="coe-page-hero">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2" style="color:#7ee787">Get started</p>
+      <h1 class="coe-h1 mb-3">The Copilot app learning path</h1>
+      <p class="coe-lede mb-4">
+        Four modules, {totalLessons} hands-on lessons. Start with one real task in your first hour and finish the month helping a teammate start.
+        Tick each lesson as you go. Progress stays in this browser.
+      </p>
+      <div style="max-width:560px" data-coe-module-progress data-lessons={allKeys}>
+        <div class="d-flex flex-justify-between f5 mb-1">
+          <span>Your progress</span>
+          <span data-label>0 of {totalLessons} done</span>
+        </div>
+        <span class="Progress Progress--large" style="background:#30363d">
+          <span class="Progress-item color-bg-success-emphasis" data-bar style="width:0%"></span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="coe-section">
+    <div class="coe-container">
+      <ol class="list-style-none d-flex flex-column gap-3" style="max-width:900px">
+        {modules.map((m, i) => (
+          <li class="Box p-4">
+            <div class="d-flex flex-column flex-md-row gap-4">
+              <span class="coe-card-icon flex-shrink-0"><Octicon name={m.icon} size={20} /></span>
+              <div class="flex-1 min-width-0">
+                <p class="f6 color-fg-muted mb-1">Module {i + 1} · <Octicon name="clock" /> {m.time}</p>
+                <h2 class="h3 mb-1"><a href={href(m.path)}>{m.name}</a></h2>
+                <p class="color-fg-muted mb-3">{m.summary}</p>
+                <ul class="list-style-none d-flex flex-wrap gap-2 mb-3" aria-label={`Lessons in ${m.name}`}>
+                  {m.lessons.map((l) => (
+                    <li><a class="Label" href={href(`${m.path}#${l.id}`)}>{l.title}</a></li>
+                  ))}
+                </ul>
+                <div data-coe-module-progress data-lessons={m.lessons.map((l) => lessonKey(m.id, l.id)).join('|')}>
+                  <div class="d-flex flex-justify-between f6 color-fg-muted mb-1">
+                    <span>Progress</span>
+                    <span data-label>0 of {m.lessons.length} done</span>
+                  </div>
+                  <span class="Progress"><span class="Progress-item color-bg-success-emphasis" data-bar style="width:0%"></span></span>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <a class="btn btn-primary" href={href(m.path)}>{i === 0 ? 'Start' : 'Open'} <span class="sr-only">{m.name}</span></a>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div class="d-flex flex-items-center gap-3 mt-4">
+        <button type="button" class="btn btn-sm" data-coe-learning-reset>Reset progress</button>
+        <span class="f6 color-fg-muted" role="status" data-coe-learning-reset-status></span>
+      </div>
+
+      <div class="Box p-4 mt-6" style="max-width:900px">
+        <h2 class="h4 mb-2">Already past the basics?</h2>
+        <p class="color-fg-muted mb-0">
+          Jump to your <a href={href('/roles/')}>role page</a>, browse the <a href={href('/prompts/')}>prompt library</a> or read
+          <a href={href('/verify/')}>how to verify the agent's work</a>. Admins should start with the <a href={href('/coe/admin-guide/')}>admin guide</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import '../../scripts/learning';
+</script>

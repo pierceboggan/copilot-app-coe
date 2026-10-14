@@ -1,0 +1,57 @@
+---
+layout: ../layouts/Doc.astro
+title: Stories
+eyebrow: Illustrative composites
+description: Short before and after sketches of how teams use the Copilot app. They are composites, not customer stories.
+---
+
+<div class="flash flash-warn mb-4" role="note">
+  <strong>These are illustrative composites.</strong> No story describes a real company, team or person. They combine common patterns into one example, and they contain no quotes and no measured results. Use them to picture a workflow, then measure your own.
+</div>
+
+Each story names the workflow it uses so you can try it. Use this format when you write up your own wins for the [community page](/community/#share-wins).
+
+## A platform team clears its review queue
+
+**Before.** Pull requests sat for days. Reviewers spent their first pass on style, missing tests and stale branches. Authors context-switched back days later to fix small things.
+
+**After.** Authors start a session from each pull request in **My work** and ask the agent to fix review comments and failing checks. They run `/rubber-duck` and `/security-review` before asking for a human review. Human reviewers spend their time on design. Once a pull request is approved, the author turns on Agent merge to handle the last rebase and merge.
+
+**Measure it with:** [review turnaround](/coe/metrics/#review-turnaround) and [PR cycle time](/coe/metrics/#pr-cycle-time).
+**Try it:** the [engineer workflows](/roles/engineer/) and the [verify guide](/verify/).
+
+## A product manager turns feedback into a spec
+
+**Before.** Feedback lived in issues, a survey export and meeting notes. Pulling it into one picture took most of a week, so the spec started from memory.
+
+**After.** The PM attaches the survey CSV and issue export to a chat. The agent groups the feedback into themes in an Excel canvas, links each theme to example issues, and drafts a one-page spec in a Word canvas. The PM edits the draft, then starts a Plan mode session to prototype the top request in code.
+
+**Measure it with:** [time to first draft](/coe/metrics/#time-to-first-draft) and [time to prototype](/coe/metrics/#time-to-prototype).
+**Try it:** the [product manager workflows](/roles/product-manager/).
+
+## An operations analyst builds a tracker without a repository
+
+**Before.** A weekly report meant copying numbers between spreadsheets by hand, and every new question needed another formula someone had to explain.
+
+**After.** The analyst opens a chat, attaches a test export and asks for a summary tab, a pivot and a chart in an Excel canvas. Follow-up questions go in plain language. When the report settles, they save the prompt as a weekly automation that rebuilds it from the latest export.
+
+**Measure it with:** [time to insight](/coe/metrics/#time-to-insight) and [toil hours](/coe/metrics/#toil-hours).
+**Try it:** the [business and operations workflows](/roles/business-ops/).
+
+## An engineering manager automates the Monday triage
+
+**Before.** The lead spent Monday morning reading new issues, tagging them and pinging owners. Duplicates slipped through, and urgent bugs waited for the meeting.
+
+**After.** A scheduled automation reads new issues, labels them, flags likely duplicates and posts a summary on a pinned issue. The lead reviews the summary, corrects a few labels and assigns the urgent ones. The meeting starts from the summary instead of the raw list.
+
+**Measure it with:** [triage time](/coe/metrics/#triage-time).
+**Try it:** the [engineering manager workflows](/roles/engineering-manager/).
+
+## A CoE lead launches in a month
+
+**Before.** A cautious rollout plan held the app behind a quarter-long pilot. Most people with a Copilot license didn't know the app existed.
+
+**After.** The CoE ran a two-week validation sprint with real issues, fixed the blockers it found and turned the app on for everyone. Launch comms led with one prompt to try that day. Champions ran weekly office hours, and the CoE tracked the funnel from install to weekly active.
+
+**Measure it with:** the [activation funnel](/coe/measurement/#activation-funnel).
+**Try it:** the [admin guide](/coe/admin-guide/) and the [CoE checklist](/coe/checklist/).

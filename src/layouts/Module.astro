@@ -1,0 +1,70 @@
+---
+import Octicon from '../components/Octicon.astro';
+import { lessonKey, modules } from '../data/learning';
+import { href } from '../lib/paths';
+import Base from './Base.astro';
+
+interface Props {
+  frontmatter: { title: string; description?: string; module: string };
+}
+
+const { frontmatter } = Astro.props;
+const index = modules.findIndex((m) => m.id === frontmatter.module);
+if (index < 0) throw new Error(`Unknown learning module ${frontmatter.module}`);
+const current = modules[index];
+const prev = modules[index - 1];
+const next = modules[index + 1];
+---
+<Base title={frontmatter.title} description={frontmatter.description}>
+  <section class="coe-page-hero">
+    <div class="coe-container">
+      <nav aria-label="Breadcrumb" class="mb-3 f5">
+        <a href={href('/get-started/')}>Learning path</a>
+        <span style="color:#9198a1">/ Module {index + 1} of {modules.length}</span>
+      </nav>
+      <h1 class="coe-h1 mb-3">{frontmatter.title}</h1>
+      {frontmatter.description && <p class="coe-lede mb-4">{frontmatter.description}</p>}
+      <div style="max-width:560px" data-coe-module-progress data-lessons={current.lessons.map((l) => lessonKey(current.id, l.id)).join('|')}>
+        <div class="d-flex flex-justify-between f5 mb-1">
+          <span><Octicon name="clock" /> {current.time}</span>
+          <span data-label>0 of {current.lessons.length} done</span>
+        </div>
+        <span class="Progress Progress--large" style="background:#30363d">
+          <span class="Progress-item color-bg-success-emphasis" data-bar style="width:0%"></span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <div class="coe-container py-6">
+    <div class="d-flex flex-column flex-lg-row gap-6">
+      <aside class="flex-shrink-0" style="width:100%; max-width:260px">
+        <nav class="coe-toc position-sticky" style="top:88px" aria-label="Lessons in this module">
+          <h2 class="f6 text-uppercase color-fg-muted mb-2">Lessons</h2>
+          {current.lessons.map((l, i) => <a href={`#${l.id}`}>{i + 1}. {l.title}</a>)}
+        </nav>
+      </aside>
+      <div class="flex-1 min-width-0">
+        <article class="markdown-body" style="max-width: 820px">
+          <slot />
+        </article>
+        <nav class="d-flex flex-justify-between gap-3 mt-6 pt-4 border-top" aria-label="Modules">
+          {prev ? (
+            <a class="btn" href={href(prev.path)}><Octicon name="arrow-left" /> {prev.name}</a>
+          ) : (
+            <a class="btn" href={href('/get-started/')}><Octicon name="arrow-left" /> Learning path</a>
+          )}
+          {next ? (
+            <a class="btn btn-primary" href={href(next.path)}>Next: {next.name} <Octicon name="arrow-right" /></a>
+          ) : (
+            <a class="btn btn-primary" href={href('/roles/')}>Find your role's use cases <Octicon name="arrow-right" /></a>
+          )}
+        </nav>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import '../scripts/learning';
+</script>

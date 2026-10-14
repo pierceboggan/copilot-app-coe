@@ -1,0 +1,74 @@
+---
+layout: ../../layouts/Doc.astro
+title: Admin guide
+eyebrow: Center of Excellence
+description: One path for enterprise and organization admins, from first policy to an org-wide habit, in four phases.
+---
+
+This is the order we recommend. Each phase lists the decisions to make and the pages that cover them in depth. Detailed policy and customization guidance lives on the [governance](/coe/governance/) and [customizations](/coe/customizations/) pages, so this guide links to them instead of repeating them.
+
+| Phase | Goal | Matching checklist phase |
+| --- | --- | --- |
+| [1. Technical setup](#technical-setup) | Licenses, policies, models and tools are ready before anyone installs | [Prove it](/coe/checklist/#pilot) |
+| [2. Launch and change management](#launch) | Everyone knows the app exists, why it matters and how to start | [Switch it on](/coe/checklist/#expand) |
+| [3. Enablement and training](#enablement) | People finish real work in their first week | [Switch it on](/coe/checklist/#expand) and [Make it a habit](/coe/checklist/#scale) |
+| [4. Scaling](#scaling) | Shared customizations, automations and metrics keep usage growing | [Make it a habit](/coe/checklist/#scale) and [Compound it](/coe/checklist/#optimize) |
+
+<h2 id="technical-setup">1. Technical setup</h2>
+
+Do this before the validation sprint starts. Most of it takes an afternoon.
+
+1. **Confirm licenses.** Each person needs a Copilot Business or Copilot Enterprise license from the enterprise or organization that governs their access. Each person installs the app and signs in on their own.
+2. **Check the app policy.** The **GitHub Copilot app** policy is on by default for Copilot Business and Copilot Enterprise. It is separate from the Copilot CLI policy, so turning one on does not turn on the other. Set the enterprise baseline first, then let organizations decide where that fits your model.
+3. **Set model availability.** Model availability policies apply to the app. Pick a baseline that meets your security, compliance and cost requirements.
+4. **Decide on MCP servers.** If people need MCP servers, turn on the **MCP servers in Copilot** policy and allowlist only approved servers with `allowedMcpServers` in your enterprise `managed-settings.json`. Use `deniedMcpServers` to block specific configurations. The allowlist controls what can run but does not install anything.
+5. **Decide on plugins.** Choose which plugin marketplaces people can use and whether to publish your own. See [plugin marketplaces](/coe/customizations/#plugin-marketplaces) and [enterprise-managed settings](/coe/customizations/#enterprise-managed-settings).
+6. **Decide on cloud work.** Cloud automations and cloud sandboxes need Copilot cloud agent enabled for the repository. Cloud sandboxes are in public preview. See [sandboxes](/coe/governance/#sandboxes) and [automations](/coe/governance/#automations).
+7. **Check sign-in.** GitHub.com and GHE.com accounts are supported. GitHub Enterprise Server is not supported today.
+8. **Prepare a pilot repository.** Add `.github/github-app.yml` with setup scripts and short instructions so the first session just works. See [repository configuration](/coe/governance/#repository-configuration).
+
+Primary sources: [Rolling out the Copilot app to your team](https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/enable-developers/copilot-app-for-teams), [supported surfaces for policies](https://docs.github.com/en/copilot/reference/supported-surfaces-for-policies) and [enterprise-managed settings](https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/use-managed-settings/get-started).
+
+**Exit check:** a pilot developer can install, sign in, open the pilot repository, use an approved model and approved MCP server, run the tests and open a pull request. The [admin readiness package](/resources/#admin-readiness) has a deck and webinar outline for this step.
+
+<h2 id="launch">2. Launch and change management</h2>
+
+The most common blocker is awareness. Many people with a Copilot license don't know the app exists. Plan the announcement like a product launch.
+
+1. **Name a sponsor and champions.** Use the [operating model](/coe/#roles) and the [responsibility matrix](/coe/#responsibility-matrix).
+2. **Run a two-week validation sprint.** Pick a small cohort and real issues. Ask each person to finish one task from issue to pull request. Collect feedback on install, policy blocks, task choice and review quality.
+3. **Fix what the sprint found,** then turn the app on broadly. Keep anything that is not ready behind policy and managed settings rather than behind a long gated pilot. The [controlled rollout](/coe/governance/#controlled-rollout) section explains the pattern.
+4. **Send the launch comms.** Use the [launch email and chat templates](/resources/#launch-comms). Lead with one concrete thing to try today, and link to the [learning path](/get-started/).
+5. **Hold a demo day** for decision makers and admins. The [demo day format](/resources/#demo-day) runs in 45 minutes.
+
+GitHub's [drive adoption](https://docs.github.com/en/copilot/tutorials/roll-out-at-scale/enable-developers/drive-adoption) tutorial has a useful countdown: onboarding work about 45 days before launch, announcements two weeks out, a workshop one week out, and a channel and wiki on launch day. Compress it if you are moving faster.
+
+**Exit check:** the app is on for every licensed person, launch comms went out and people know where to ask for help.
+
+<h2 id="enablement">3. Enablement and training</h2>
+
+Training works when people finish real work. Point everyone at the same short path, then give them role-specific workflows.
+
+1. **Share the [learning path](/get-started/).** It takes about an hour to finish a real task and a month to build the habits.
+2. **Send people to their [role page](/roles/)** and the [prompt library](/prompts/). Every workflow has a copyable prompt.
+3. **Teach review early.** Share [verify the agent's work](/verify/) so people know what to check before they merge.
+4. **Run office hours** every week. Use the [office hours format](/community/#office-hours) and collect reliability issues and crash reports there too.
+5. **Train champions** with the [champion materials](/resources/#champions), and keep a [champion directory](/community/#champion-directory).
+
+**Exit check:** most new users finish a session in their first week, and champions answer most questions in your channel.
+
+<h2 id="scaling">4. Scaling</h2>
+
+Once people use the app weekly, invest in things that make every session better without extra effort from each person.
+
+1. **Ship shared customizations.** Move team conventions into instructions, package skills and agents as plugins and publish them through a managed marketplace. See [a rollout pattern that works](/coe/customizations/#a-rollout-pattern-that-works).
+2. **Turn chores into automations.** Start with triage, standups and dependency checks. Review the tools each automation can use. See [automations](/coe/governance/#automations).
+3. **Measure the funnel and outcomes.** Track install to first session to weekly active, then the outcome you promised your sponsor. Use the [measurement guide](/coe/measurement/) and [start from the metric](/coe/metrics/).
+4. **Review security regularly.** Revisit the MCP allowlist, plugin list and repository configuration each quarter. See [security review](/coe/governance/#security-review).
+5. **Share wins.** Publish short before and after write-ups. See [stories](/stories/) for the format.
+
+**Exit check:** weekly active use is steady or growing, shared plugins and automations exist, and you report one outcome metric to your sponsor every month.
+
+## Track it
+
+Every step above maps to an item on the [CoE checklist](/coe/checklist/). Work through it there to save progress and export it as Markdown or a GitHub issue.
