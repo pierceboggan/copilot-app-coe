@@ -1,0 +1,160 @@
+---
+import Octicon from '../components/Octicon.astro';
+import PromptBlock from '../components/PromptBlock.astro';
+import RepoSetting from '../components/RepoSetting.astro';
+import { outcomeById, outcomes } from '../data/outcomes';
+import { availableRoles, featureStatus, promptEntries } from '../data/roles';
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/paths';
+
+const features = [...new Set(promptEntries.flatMap((p) => p.features))].sort();
+const modeLabel = { plan: 'Plan', interactive: 'Interactive', autopilot: 'Autopilot' } as const;
+---
+<Base title="Prompt library" description="Every prompt on this site in one place. Filter by role, feature or the outcome you want to move.">
+  <section class="coe-page-hero">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2" style="color:#d2a8ff">Prompt library</p>
+      <h1 class="coe-h1 mb-3">Every prompt, one page</h1>
+      <p class="coe-lede">
+        {promptEntries.length} prompts from {availableRoles.length} role pages. Filter by who you are, the app feature you want to try or
+        the metric you want to move. Copy a prompt, or set a repository and open it in the app.
+      </p>
+    </div>
+  </section>
+
+  <div class="coe-container py-6">
+    <div class="d-flex flex-column flex-lg-row gap-6">
+      <aside class="flex-shrink-0" style="width:100%; max-width:280px">
+        <div class="position-sticky d-flex flex-column gap-4" style="top:88px">
+          <form class="d-flex flex-column gap-3" data-coe-prompt-filters aria-label="Filter prompts">
+            <div>
+              <label for="filter-q" class="d-block text-bold f6 mb-1">Search</label>
+              <input id="filter-q" name="q" type="search" class="form-control input-block" placeholder="spec, triage, deck…" autocomplete="off" />
+            </div>
+            <div>
+              <label for="filter-role" class="d-block text-bold f6 mb-1">Role</label>
+              <select id="filter-role" name="role" class="form-select input-block">
+                <option value="">All roles</option>
+                {availableRoles.map((r) => <option value={r.slug}>{r.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label for="filter-feature" class="d-block text-bold f6 mb-1">Feature or canvas</label>
+              <select id="filter-feature" name="feature" class="form-select input-block">
+                <option value="">All features</option>
+                {features.map((f) => <option value={f}>{f}</option>)}
+              </select>
+            </div>
+            <div>
+              <label for="filter-outcome" class="d-block text-bold f6 mb-1">Outcome</label>
+              <select id="filter-outcome" name="outcome" class="form-select input-block">
+                <option value="">All outcomes</option>
+                {outcomes.map((o) => <option value={o.id}>{o.label}</option>)}
+              </select>
+            </div>
+            <button type="reset" class="btn btn-sm"><Octicon name="x" /> Clear filters</button>
+          </form>
+          <p class="f5 text-bold mb-0" aria-live="polite" data-coe-prompt-count>{promptEntries.length} prompts</p>
+          <RepoSetting />
+        </div>
+      </aside>
+
+      <div class="flex-1 min-width-0">
+        <div class="flash mb-4 f6">
+          Not sure which metric to target? <a href={href('/coe/metrics/')}>Start from the metric</a>.
+        </div>
+        <ol class="list-style-none d-flex flex-column gap-4" data-pagefind-ignore>
+          {promptEntries.map((p) => (
+            <li
+              id={`${p.role.slug}--${p.id}`}
+              class="Box p-4"
+              data-prompt-item
+              data-role={p.role.slug}
+              data-features={p.features.join('|')}
+              data-outcomes={p.outcomes.join('|')}
+              data-text={`${p.title} ${p.summary} ${p.prompt} ${p.outcome}`.toLowerCase()}
+            >
+              <div class="d-flex flex-wrap flex-items-baseline flex-justify-between gap-2 mb-1">
+                <h2 class="h4">
+                  <a href={href(`/roles/${p.role.slug}/#${p.id}`)}>{p.title}</a>
+                </h2>
+                <span class="f6 color-fg-muted d-inline-flex flex-items-center gap-1">
+                  <Octicon name={p.role.icon} /> {p.role.name} · {modeLabel[p.mode]} mode
+                </span>
+              </div>
+              <p class="color-fg-muted mb-2">{p.summary}</p>
+              <div class="d-flex flex-wrap gap-1 mb-3">
+                {p.features.map((f) => (
+                  <span class={`Label ${featureStatus[f] ? 'Label--attention' : 'Label--accent'}`}>
+                    {f}{featureStatus[f] && <span>: {featureStatus[f]!.label}</span>}
+                  </span>
+                ))}
+                {p.outcomes.map((o) => <span class="Label Label--success">{outcomeById[o].label}</span>)}
+              </div>
+              <PromptBlock prompt={p.prompt} mode={p.mode} />
+              <p class="mt-2 mb-0 f6"><strong>Outcome:</strong> {p.outcome}</p>
+            </li>
+          ))}
+        </ol>
+        <div class="blankslate" hidden data-coe-prompt-empty>
+          <h2 class="blankslate-heading">No prompts match</h2>
+          <p>Try a different role or feature, or clear the filters.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-coe-prompt-filters]');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-prompt-item]')];
+  const count = document.querySelector<HTMLElement>('[data-coe-prompt-count]');
+  const empty = document.querySelector<HTMLElement>('[data-coe-prompt-empty]');
+  const keys = ['q', 'role', 'feature', 'outcome'] as const;
+
+  function field(name: string) {
+    return form?.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
+  }
+
+  function apply(updateUrl: boolean) {
+    const q = (field('q')?.value ?? '').trim().toLowerCase();
+    const role = field('role')?.value ?? '';
+    const feature = field('feature')?.value ?? '';
+    const outcome = field('outcome')?.value ?? '';
+    let shown = 0;
+    for (const item of items) {
+      const match =
+        (!q || (item.dataset.text ?? '').includes(q)) &&
+        (!role || item.dataset.role === role) &&
+        (!feature || (item.dataset.features ?? '').split('|').includes(feature)) &&
+        (!outcome || (item.dataset.outcomes ?? '').split('|').includes(outcome));
+      item.hidden = !match;
+      if (match) shown++;
+    }
+    if (count) count.textContent = `${shown} prompt${shown === 1 ? '' : 's'}`;
+    if (empty) empty.hidden = shown > 0;
+    if (updateUrl) {
+      const params = new URLSearchParams();
+      for (const k of keys) {
+        const v = field(k)?.value.trim();
+        if (v) params.set(k, v);
+      }
+      const qs = params.toString();
+      history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+    }
+  }
+
+  const initial = new URLSearchParams(location.search);
+  for (const k of keys) {
+    const el = field(k);
+    const v = initial.get(k);
+    if (!el || !v) continue;
+    if (el instanceof HTMLSelectElement && ![...el.options].some((o) => o.value === v)) continue;
+    el.value = v;
+  }
+  apply(false);
+  form?.addEventListener('input', () => apply(true));
+  form?.addEventListener('change', () => apply(true));
+  form?.addEventListener('submit', (e) => e.preventDefault());
+  form?.addEventListener('reset', () => setTimeout(() => apply(true)));
+</script>

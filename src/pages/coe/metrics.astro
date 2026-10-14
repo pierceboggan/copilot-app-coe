@@ -1,0 +1,66 @@
+---
+import Octicon from '../../components/Octicon.astro';
+import { outcomes } from '../../data/outcomes';
+import { promptEntries } from '../../data/roles';
+import Base from '../../layouts/Base.astro';
+import { href } from '../../lib/paths';
+---
+<Base title="Start from the metric" description="Pick the number you need to move, then find the use cases that move it.">
+  <section class="coe-page-hero">
+    <div class="coe-container">
+      <p class="coe-eyebrow mb-2" style="color:#d2a8ff">Center of Excellence</p>
+      <h1 class="coe-h1 mb-3">Start from the metric</h1>
+      <p class="coe-lede">
+        Your sponsor cares about a number. Pick it below and roll out the use cases that move it first. Then measure it the way the
+        <a href={href('/coe/measurement/')}>measurement guide</a> describes.
+      </p>
+    </div>
+  </section>
+
+  <div class="coe-container py-6">
+    <div class="d-flex flex-column flex-lg-row gap-6">
+      <aside class="flex-shrink-0" style="width:100%; max-width:260px">
+        <nav class="coe-toc position-sticky" style="top:88px" aria-label="Metrics on this page">
+          <h2 class="f6 text-uppercase color-fg-muted mb-2">Metrics</h2>
+          {outcomes.map((o) => (
+            <a href={`#${o.id}`} class="d-flex flex-justify-between">
+              <span>{o.label}</span>
+              <span class="Counter">{promptEntries.filter((p) => p.outcomes.includes(o.id)).length}</span>
+            </a>
+          ))}
+        </nav>
+      </aside>
+
+      <div class="flex-1 min-width-0 d-flex flex-column gap-4">
+        {outcomes.map((o) => {
+          const matches = promptEntries.filter((p) => p.outcomes.includes(o.id));
+          return (
+            <section id={o.id} class="Box" aria-labelledby={`${o.id}-heading`}>
+              <div class="Box-header">
+                <h2 id={`${o.id}-heading`} class="Box-title f3 d-flex flex-items-center gap-2">
+                  <Octicon name="graph" /> {o.label}
+                </h2>
+              </div>
+              <div class="Box-body">
+                <p class="mb-1"><strong>Measure:</strong> {o.measure}</p>
+                <p class="mb-3 color-fg-muted"><strong>Where to get it:</strong> {o.source}</p>
+                <h3 class="f5 mb-2">Use cases that move it ({matches.length})</h3>
+                <ul class="ml-3">
+                  {matches.map((m) => (
+                    <li class="mb-1">
+                      <a href={href(`/roles/${m.role.slug}/#${m.id}`)}>{m.title}</a>
+                      <span class="color-fg-muted"> · {m.role.name}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p class="mt-3 mb-0 f6">
+                  <a href={href(`/prompts/?outcome=${o.id}`)}>See these prompts in the prompt library →</a>
+                </p>
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</Base>
